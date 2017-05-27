@@ -7,9 +7,10 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="Home"/>
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_about"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery"/>
+            android:checked="true"
+            android:title="About"/>
     </group>
 
 </menu>
