@@ -14,11 +14,35 @@
         <item>Recipe 2</item>
         <item>Recipe 3</item>
         <item>Recipe 4</item>
+        <item>Recipe 5</item>
+        <item>Recipe 6</item>
+        <item>Recipe 7</item>
+        <item>Recipe 8</item>
+        <item>Recipe 9</item>
+        <item>Recipe 10</item>
+        <item>Recipe 11</item>
+        <item>Recipe 12</item>
+        <item>Recipe 13</item>
+        <item>Recipe 14</item>
+        <item>Recipe 15</item>
+        <item>Recipe 16</item>
     </string-array>
     <string-array name="recipe_description">
         <item>Recipe 1 description</item>
         <item>Recipe 2 description</item>
         <item>Recipe 3 description</item>
         <item>Recipe 4 description</item>
+        <item>Recipe 5 description</item>
+        <item>Recipe 6 description</item>
+        <item>Recipe 7 description</item>
+        <item>Recipe 8 description</item>
+        <item>Recipe 9 description</item>
+        <item>Recipe 10 description</item>
+        <item>Recipe 11 description</item>
+        <item>Recipe 12 description</item>
+        <item>Recipe 13 description</item>
+        <item>Recipe 14 description</item>
+        <item>Recipe 15 description</item>
+        <item>Recipe 16 description</item>
     </string-array>
 </resources>

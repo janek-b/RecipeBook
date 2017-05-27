@@ -1,9 +1,11 @@
 package com.janek.recipebook;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 
 public class RecipeListAdapter extends BaseAdapter {
@@ -34,6 +36,14 @@ public class RecipeListAdapter extends BaseAdapter {
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
-    return null;
+    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    if (convertView == null) {
+      convertView = inflater.inflate(R.layout.recipe_list_item, null);
+    }
+    TextView title = (TextView) convertView.findViewById(R.id.recipe_title);
+    TextView desc = (TextView) convertView.findViewById(R.id.recipe_desc);
+    title.setText(mRecipeTitles[position]);
+    desc.setText(mRecipeDescriptions[position]);
+    return convertView;
   }
 }

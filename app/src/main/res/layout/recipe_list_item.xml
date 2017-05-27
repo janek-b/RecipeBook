@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.07"
             android:text="TextView"
-            android:textAlignment="center"
+            android:textAlignment="viewStart"
             android:textSize="30sp"/>
 
         <TextView
