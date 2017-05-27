@@ -11,6 +11,10 @@
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_info_outline_black_48dp"
             android:title="About"/>
+        <item
+            android:id="@+id/nav_recipe_list"
+            android:icon="@drawable/ic_info_outline_black_48dp"
+            android:title="Recipe List"/>
     </group>
 
 </menu>

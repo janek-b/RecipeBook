@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity
       case R.id.nav_about:
         fragment = new About();
         break;
+      case R.id.nav_recipe_list:
+        fragment = new RecipeList();
+        break;
       default:
         fragment = new Home();
     }
