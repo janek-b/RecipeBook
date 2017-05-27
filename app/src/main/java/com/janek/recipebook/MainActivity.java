@@ -70,20 +70,20 @@ public class MainActivity extends AppCompatActivity
   @SuppressWarnings("StatementWithEmptyBody")
   @Override
   public boolean onNavigationItemSelected(MenuItem item) {
-    // Handle navigation view item clicks here.
     Fragment fragment = null;
     switch (item.getItemId()) {
       case R.id.nav_home:
+        fragment = new Home();
         break;
       case R.id.nav_about:
         fragment = new About();
         break;
       default:
-        fragment = new About();
+        fragment = new Home();
     }
 
     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    ft.replace(R.id.content_main, fragment).commit();
+    ft.replace(R.id.content_frame, fragment).commit();
 
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
