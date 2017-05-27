@@ -9,10 +9,16 @@
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut feugiat auctor consectetur. Proin et risus efficitur, rhoncus magna eu, hendrerit lectus. Cras ut porttitor ipsum. Praesent suscipit nunc eu commodo semper. Vivamus sit amet mauris elementum, rhoncus metus nec, vulputate tellus. Sed eget volutpat tellus. Donec dictum justo vel dolor aliquam aliquam. Donec pharetra sagittis ultrices. Etiam elementum ac sem quis volutpat. Proin dui elit, feugiat ac dolor vel, bibendum pellentesque urna. Nulla sed faucibus diam. Nunc at nulla sem.</string>
 
 
-    <string-array name="recipes">
+    <string-array name="recipe_name">
         <item>Recipe 1</item>
         <item>Recipe 2</item>
         <item>Recipe 3</item>
         <item>Recipe 4</item>
+    </string-array>
+    <string-array name="recipe_description">
+        <item>Recipe 1 description</item>
+        <item>Recipe 2 description</item>
+        <item>Recipe 3 description</item>
+        <item>Recipe 4 description</item>
     </string-array>
 </resources>
