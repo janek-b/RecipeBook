@@ -27,6 +27,10 @@ public class RecipeDetail extends Fragment {
     ButterKnife.bind(this, view);
     Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
 
+    Bundle bundle = getArguments();
+    String title = bundle.getString("title");
+
+    mTitle.setText(title);
     mTitle.setTypeface(raleway);
     mDesc.setTypeface(raleway);
     return view;

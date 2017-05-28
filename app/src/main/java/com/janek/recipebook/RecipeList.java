@@ -23,8 +23,8 @@ public class RecipeList extends Fragment {
     View view = inflater.inflate(R.layout.recipe_list, container, false);
     ButterKnife.bind(this, view);
 
-    String[] recipeNames = getResources().getStringArray(R.array.recipe_name);
-    String[] recipeDesc = getResources().getStringArray(R.array.recipe_description);
+    final String[] recipeNames = getResources().getStringArray(R.array.recipe_name);
+    final String[] recipeDesc = getResources().getStringArray(R.array.recipe_description);
     mRecipeList.setAdapter(new RecipeListAdapter(getActivity(), recipeNames, recipeDesc));
 
     mRecipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -34,7 +34,9 @@ public class RecipeList extends Fragment {
         Toast.makeText(getActivity(), recipe, Toast.LENGTH_LONG).show();
 
         Fragment fragment = new RecipeDetail();
-        // attach recipe info in bundle to fragment
+        Bundle bundle = new Bundle();
+        bundle.putString("title", recipeNames[position]);
+        fragment.setArguments(bundle);
         ((MainActivity)getActivity()).loadFragment(fragment);
       }
     });
