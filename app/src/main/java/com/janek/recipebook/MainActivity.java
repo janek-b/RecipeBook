@@ -95,12 +95,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   public void loadNavFragment(Fragment fragment) {
     FragmentManager fragmentManager = getSupportFragmentManager();
     fragmentManager.popBackStack(BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(BACK_STACK_ROOT_TAG).commit();
+    fragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        .replace(R.id.content_frame, fragment)
+        .addToBackStack(BACK_STACK_ROOT_TAG).commit();
   }
 
   public void loadFragment(Fragment fragment) {
     FragmentManager fragmentManger = getSupportFragmentManager();
-    fragmentManger.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+    fragmentManger.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        .replace(R.id.content_frame, fragment).addToBackStack(null).commit();
   }
 
   @SuppressWarnings("StatementWithEmptyBody")
