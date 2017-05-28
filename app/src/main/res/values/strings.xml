@@ -45,4 +45,26 @@
         <item>Recipe 15 description</item>
         <item>Recipe 16 description</item>
     </string-array>
+
+
+    <string-array name="ingredients">
+        <item>Ingredient 1</item>
+        <item>Ingredient 2</item>
+        <item>Ingredient 3</item>
+        <item>Ingredient 4</item>
+        <item>Ingredient 5</item>
+        <item>Ingredient 6</item>
+        <item>Ingredient 7</item>
+        <item>Ingredient 8</item>
+    </string-array>
+
+    <string-array name="directions">
+        <item>step 1</item>
+        <item>step 2</item>
+        <item>step 3</item>
+        <item>step 4</item>
+        <item>step 5</item>
+        <item>step 6</item>
+        <item>step 7</item>
+    </string-array>
 </resources>
