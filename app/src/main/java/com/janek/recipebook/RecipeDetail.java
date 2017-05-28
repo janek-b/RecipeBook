@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 
 public class RecipeDetail extends Fragment {
   @Bind(R.id.recipe_detail_name) TextView mTitle;
-  @Bind(R.id.recipe_detail_desc) TextView mDesc;
   @Bind(R.id.expand_list) ExpandableListView mExpandListView;
   private RecipeDetailExpandAdapter mExpandListAdapter;
 
@@ -46,7 +45,6 @@ public class RecipeDetail extends Fragment {
 
     mTitle.setText(title);
     mTitle.setTypeface(raleway);
-    mDesc.setTypeface(raleway);
     return view;
   }
 
