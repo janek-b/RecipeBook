@@ -25,7 +25,6 @@ public class RecipeList extends Fragment {
 
     String[] recipeNames = getResources().getStringArray(R.array.recipe_name);
     String[] recipeDesc = getResources().getStringArray(R.array.recipe_description);
-//    ((MainActivity)getActivity()).loadFragment();
     mRecipeList.setAdapter(new RecipeListAdapter(getActivity(), recipeNames, recipeDesc));
 
     mRecipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -35,7 +34,7 @@ public class RecipeList extends Fragment {
         Toast.makeText(getActivity(), recipe, Toast.LENGTH_LONG).show();
 
         Fragment fragment = new RecipeDetail();
-        // attach recipe info un bundle to fragment
+        // attach recipe info in bundle to fragment
         ((MainActivity)getActivity()).loadFragment(fragment);
       }
     });

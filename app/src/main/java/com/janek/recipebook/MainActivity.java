@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,8 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity
-    implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+  private static final String BACK_STACK_ROOT_TAG = "root_fragment";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,29 @@ public class MainActivity extends AppCompatActivity
 
     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(this);
-    loadFragment(new Home());
+
+    // Initialize with Home fragment
+    getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new Home()).commit();
+
+    // Listen for fragment changes and update selected nav item
+    getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+      @Override
+      public void onBackStackChanged() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        int id;
+        if (fragment instanceof Home) {
+          id = R.id.nav_home;
+        } else if (fragment instanceof About) {
+          id = R.id.nav_about;
+        } else if (fragment instanceof RecipeList) {
+          id = R.id.nav_recipe_list;
+        } else {
+          return;
+        }
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(id);
+      }
+    });
   }
 
   @Override
@@ -68,32 +92,37 @@ public class MainActivity extends AppCompatActivity
     return super.onOptionsItemSelected(item);
   }
 
+  public void loadNavFragment(Fragment fragment) {
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    fragmentManager.popBackStack(BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(BACK_STACK_ROOT_TAG).commit();
+  }
+
   public void loadFragment(Fragment fragment) {
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-    ft.replace(R.id.content_frame, fragment).commit();
+    FragmentManager fragmentManger = getSupportFragmentManager();
+    fragmentManger.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
   }
 
   @SuppressWarnings("StatementWithEmptyBody")
   @Override
   public boolean onNavigationItemSelected(MenuItem item) {
-    Fragment fragment = null;
     switch (item.getItemId()) {
       case R.id.nav_home:
-        fragment = new Home();
+        loadNavFragment(new Home());
         break;
       case R.id.nav_about:
-        fragment = new About();
+        loadNavFragment(new About());
         break;
       case R.id.nav_recipe_list:
-        fragment = new RecipeList();
+        loadNavFragment(new RecipeList());
         break;
       default:
-        fragment = new Home();
+        loadNavFragment(new Home());
     }
-    loadFragment(fragment);
 
     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
     return true;
   }
+
 }

@@ -4,14 +4,52 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light">
+
+    <ImageView
+        android:id="@+id/recipe_detail_img"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/recipe_detail_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Detail"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Recipe Name"
+        android:textColor="@color/colorTextIcons"
         android:textSize="30sp"
-        tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="101dp"/>
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/recipe_detail_img"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/recipe_detail_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:padding="16dp"
+        android:text="@string/lorem"
+        android:textSize="18sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_detail_img"/>
+
 </android.support.constraint.ConstraintLayout>
