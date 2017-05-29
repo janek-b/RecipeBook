@@ -1,4 +1,4 @@
-package com.janek.recipebook;
+package com.janek.recipebook.ui;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.janek.recipebook.R;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class Home extends Fragment {
+public class HomeFragment extends Fragment {
   @Bind(R.id.home_title) TextView mTitle;
   @Nullable
   @Override

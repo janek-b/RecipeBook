@@ -1,4 +1,4 @@
-package com.janek.recipebook;
+package com.janek.recipebook.ui;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.janek.recipebook.R;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class About extends Fragment {
+public class AboutFragment extends Fragment {
   @Bind(R.id.about_title) TextView mTitle;
   @Nullable
   @Override
@@ -27,7 +29,7 @@ public class About extends Fragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    getActivity().setTitle("About");
+    getActivity().setTitle("AboutFragment");
 
   }
 }

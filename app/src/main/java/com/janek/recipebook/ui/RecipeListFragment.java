@@ -1,4 +1,4 @@
-package com.janek.recipebook;
+package com.janek.recipebook.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,10 +11,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.janek.recipebook.R;
+import com.janek.recipebook.adapters.RecipeListAdapter;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RecipeList extends Fragment {
+public class RecipeListFragment extends Fragment {
   @Bind(R.id.recipe_list) ListView mRecipeList;
 
   @Nullable
@@ -33,7 +36,7 @@ public class RecipeList extends Fragment {
         String recipe = ((TextView)view.findViewById(R.id.recipe_title)).getText().toString();
         Toast.makeText(getActivity(), recipe, Toast.LENGTH_LONG).show();
 
-        Fragment fragment = new RecipeDetail();
+        Fragment fragment = new RecipeDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putString("title", recipeNames[position]);
         fragment.setArguments(bundle);

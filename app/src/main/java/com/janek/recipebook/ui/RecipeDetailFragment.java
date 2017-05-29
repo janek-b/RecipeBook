@@ -1,4 +1,4 @@
-package com.janek.recipebook;
+package com.janek.recipebook.ui;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -10,17 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.janek.recipebook.R;
+import com.janek.recipebook.adapters.RecipeDetailExpandAdapter;
+
 import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RecipeDetail extends Fragment {
+public class RecipeDetailFragment extends Fragment {
   @Bind(R.id.recipe_detail_name) TextView mTitle;
   @Bind(R.id.expand_list) ExpandableListView mExpandListView;
   private RecipeDetailExpandAdapter mExpandListAdapter;
 
-  public RecipeDetail() {
+  public RecipeDetailFragment() {
   }
 
   @Nullable
