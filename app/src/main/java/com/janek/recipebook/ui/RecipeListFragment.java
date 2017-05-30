@@ -33,9 +33,6 @@ public class RecipeListFragment extends Fragment {
     mRecipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        String recipe = ((TextView)view.findViewById(R.id.recipe_title)).getText().toString();
-        Toast.makeText(getActivity(), recipe, Toast.LENGTH_LONG).show();
-
         Fragment fragment = new RecipeDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putString("title", recipeNames[position]);
