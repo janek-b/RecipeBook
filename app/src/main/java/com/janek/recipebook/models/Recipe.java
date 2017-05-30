@@ -7,12 +7,16 @@ public class Recipe {
   private String title;
   private String url;
   private String imageUrl;
+  private double recipeId;
+  private double rating;
   private List<String> ingredients = new ArrayList<>();
 
-  public Recipe(String title, String url, String imageUrl, ArrayList<String> ingredients) {
+  public Recipe(String title, String url, String imageUrl, double recipeId, double rating, ArrayList<String> ingredients) {
     this.title = title;
     this.url = url;
     this.imageUrl = imageUrl;
+    this.recipeId = recipeId;
+    this.rating = rating;
     this.ingredients = ingredients;
   }
 
@@ -26,6 +30,14 @@ public class Recipe {
 
   public String getImageUrl() {
     return imageUrl;
+  }
+
+  public double getRecipeId() {
+    return recipeId;
+  }
+
+  public double getRating() {
+    return rating;
   }
 
   public List<String> getIngredients() {
