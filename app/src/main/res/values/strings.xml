@@ -6,6 +6,13 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="about">
+        Recipe Book - an app to discover and manage your favorite recipes.
+    </string>
+
+    <string name="copyright">Copyright (c) 2017 - Janek Brandt</string>
+    <string name="githubLink"><a href="https://github.com/janek-b/RecipeBook">Github</a></string>
+
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut feugiat auctor consectetur. Proin et risus efficitur, rhoncus magna eu, hendrerit lectus. Cras ut porttitor ipsum. Praesent suscipit nunc eu commodo semper. Vivamus sit amet mauris elementum, rhoncus metus nec, vulputate tellus. Sed eget volutpat tellus. Donec dictum justo vel dolor aliquam aliquam. Donec pharetra sagittis ultrices. Etiam elementum ac sem quis volutpat. Proin dui elit, feugiat ac dolor vel, bibendum pellentesque urna. Nulla sed faucibus diam. Nunc at nulla sem.</string>
 
 
