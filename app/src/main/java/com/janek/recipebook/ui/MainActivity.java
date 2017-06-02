@@ -10,13 +10,32 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
+import com.janek.recipebook.models.RecipeList;
+import com.janek.recipebook.services.SpoonClient;
+
+import java.io.IOException;
+import java.util.List;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
   private static final String BACK_STACK_ROOT_TAG = "root_fragment";
+
+  private Retrofit retrofit;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +73,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setCheckedItem(id);
+      }
+    });
+
+    OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    httpClient.addInterceptor(new Interceptor() {
+      @Override
+      public Response intercept(Chain chain) throws IOException {
+        Request original = chain.request();
+        Request request = original.newBuilder()
+            .header("X-Mashape-Key", Constants.SPOON_KEY)
+            .header("Accept", "application/json")
+            .method(original.method(), original.body())
+            .build();
+
+        return chain.proceed(request);
+      }
+    });
+    OkHttpClient client = httpClient.build();
+
+    retrofit = new Retrofit.Builder()
+        .baseUrl(Constants.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(client).build();
+  }
+
+  public void runSearch(String search) {
+    SpoonClient client = retrofit.create(SpoonClient.class);
+    Call<ResponseBody> call = client.searchRecipes(true, search);
+    call.enqueue(new Callback<ResponseBody>() {
+      @Override
+      public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+        try {
+          Log.d("test", response.body().string());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ResponseBody> call, Throwable t) {
+        t.printStackTrace();
       }
     });
   }
