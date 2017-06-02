@@ -1,21 +1,24 @@
 package com.janek.recipebook.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.parceler.Parcel;
 
 @Parcel
 public class RecipeList {
-  int id;
-  String title;
-  int readyInMinutes;
-  String image;
-  String[] imageUrls;
+  private int id;
+  private String title;
+  @SerializedName("readyInMinutes")
+  private int cookTime;
+  private String image;
+  private String[] imageUrls;
 
   public RecipeList() {}
 
-  public RecipeList(int id, String title, int readyInMinutes, String image, String[] imageUrls) {
+  public RecipeList(int id, String title, int cookTime, String image, String[] imageUrls) {
     this.id = id;
     this.title = title;
-    this.readyInMinutes = readyInMinutes;
+    this.cookTime = cookTime;
     this.image = image;
     this.imageUrls = imageUrls;
   }
@@ -24,8 +27,8 @@ public class RecipeList {
   public String getTitle() {
     return title;
   }
-  public int getReadyInMinutes() {
-    return readyInMinutes;
+  public int getCookTime() {
+    return cookTime;
   }
   public String getImage() {
     return image;

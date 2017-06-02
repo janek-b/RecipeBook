@@ -1,6 +1,90 @@
 package com.janek.recipebook.models;
 
+import com.google.gson.annotations.SerializedName;
+
+import org.parceler.Parcel;
+
+import java.util.List;
+
+@Parcel
 public class Recipe {
+  private boolean vegetarian;
+  private boolean vegan;
+  private boolean glutenFree;
+  private boolean dairyFree;
+  private int servings;
+  private String sourceUrl;
+  @SerializedName("extendedIngredients")
+  private List<Ingredient> ingredients;
+  private int id;
+  private String title;
+  @SerializedName("readyInMinutes")
+  private int cookTime;
+  private String image;
+  private String instructions;
 
+  public Recipe() {}
 
+  public Recipe(boolean vegetarian, boolean vegan, boolean glutenFree, boolean dairyFree, int servings, String sourceUrl, List<Ingredient> ingredients, int id, String title, int cookTime, String image, String instructions) {
+    this.vegetarian = vegetarian;
+    this.vegan = vegan;
+    this.glutenFree = glutenFree;
+    this.dairyFree = dairyFree;
+    this.servings = servings;
+    this.sourceUrl = sourceUrl;
+    this.ingredients = ingredients;
+    this.id = id;
+    this.title = title;
+    this.cookTime = cookTime;
+    this.image = image;
+    this.instructions = instructions;
+  }
+
+  public boolean isVegetarian() {
+    return vegetarian;
+  }
+
+  public boolean isVegan() {
+    return vegan;
+  }
+
+  public boolean isGlutenFree() {
+    return glutenFree;
+  }
+
+  public boolean isDairyFree() {
+    return dairyFree;
+  }
+
+  public int getServings() {
+    return servings;
+  }
+
+  public String getSourceUrl() {
+    return sourceUrl;
+  }
+
+  public List<Ingredient> getIngredients() {
+    return ingredients;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public int getCookTime() {
+    return cookTime;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public String getInstructions() {
+    return instructions;
+  }
 }

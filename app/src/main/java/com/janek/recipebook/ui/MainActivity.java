@@ -14,30 +14,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
-import com.janek.recipebook.models.RecipeList;
 import com.janek.recipebook.models.RecipeListResponse;
 import com.janek.recipebook.services.SpoonClient;
 import com.janek.recipebook.services.SpoonService;
 
-import java.io.IOException;
-import java.util.List;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
   private static final String BACK_STACK_ROOT_TAG = "root_fragment";
-
-  private Retrofit retrofit;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Initialize with HomeFragment fragment
     getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
-
     // Listen for fragment changes and update selected nav item
     getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
       @Override
@@ -81,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
   public void runSearch(String search) {
     SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-    Call<RecipeListResponse> call = spoonClient.searchRecipes(true, search);
+    Call<RecipeListResponse> call = spoonClient.searchRecipes(search);
     call.enqueue(new Callback<RecipeListResponse>() {
       @Override public void onResponse(Call<RecipeListResponse> call, retrofit2.Response<RecipeListResponse> response) {
         RecipeListFragment recipeListFragment = RecipeListFragment.newInstance(response.body());

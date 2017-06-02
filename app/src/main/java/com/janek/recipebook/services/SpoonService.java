@@ -1,18 +1,11 @@
 package com.janek.recipebook.services;
 
-import com.google.gson.reflect.TypeToken;
 import com.janek.recipebook.Constants;
-
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -36,6 +29,7 @@ public class SpoonService {
       .addConverterFactory(GsonConverterFactory.create())
       .client(httpClient).build();
 
+  //TODO check response header for ratelimit objects remaining;
   public static <S> S createService(Class<S> serviceClass) {
     return retrofit.create(serviceClass);
   }
