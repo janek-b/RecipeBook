@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.janek.recipebook.R;
 import com.janek.recipebook.adapters.RecipeListAdapter;
 import com.janek.recipebook.models.RecipeList;
+import com.janek.recipebook.models.RecipeListResponse;
 
 import org.parceler.Parcels;
 
@@ -25,12 +26,12 @@ import butterknife.ButterKnife;
 public class RecipeListFragment extends Fragment {
   @Bind(R.id.recipe_list) ListView mRecipeList;
 
-  private List<RecipeList> recipeList;
+  private RecipeListResponse recipeResponse;
 
-  public static RecipeListFragment newInstance(List<RecipeList> recipes) {
+  public static RecipeListFragment newInstance(RecipeListResponse recipeResponse) {
     RecipeListFragment recipeListFragment = new RecipeListFragment();
     Bundle args = new Bundle();
-    args.putParcelable("recipes", Parcels.wrap(recipes));
+    args.putParcelable("recipes", Parcels.wrap(recipeResponse));
     recipeListFragment.setArguments(args);
     return recipeListFragment;
   }
@@ -38,7 +39,7 @@ public class RecipeListFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    recipeList = Parcels.unwrap(getArguments().getParcelable("recipes"));
+    recipeResponse = Parcels.unwrap(getArguments().getParcelable("recipes"));
   }
 
   @Nullable
@@ -46,10 +47,7 @@ public class RecipeListFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.recipe_list, container, false);
     ButterKnife.bind(this, view);
-
-//    final String[] recipeNames = getResources().getStringArray(R.array.recipe_name);
-//    final String[] recipeDesc = getResources().getStringArray(R.array.recipe_description);
-    mRecipeList.setAdapter(new RecipeListAdapter(getActivity(), recipeList));
+    mRecipeList.setAdapter(new RecipeListAdapter(getActivity(), recipeResponse));
 
 //    mRecipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //      @Override

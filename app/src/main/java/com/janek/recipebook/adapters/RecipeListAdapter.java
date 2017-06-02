@@ -5,21 +5,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.RecipeList;
+import com.janek.recipebook.models.RecipeListResponse;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 
 public class RecipeListAdapter extends BaseAdapter {
+  private static final int MAX_WIDTH = 400;
+  private static final int MAX_HEIGHT = 300;
+
   private Context mContext;
   private List<RecipeList> mRecipes;
+  private String mImageBaseUrl;
 
-  public RecipeListAdapter(Context context, List<RecipeList> recipes) {
+  public RecipeListAdapter(Context context, RecipeListResponse recipeListResponse) {
     this.mContext = context;
-    this.mRecipes = recipes;
+    this.mRecipes = recipeListResponse.getResults();
+    this.mImageBaseUrl = recipeListResponse.getBaseUri();
   }
 
   @Override
@@ -45,8 +53,11 @@ public class RecipeListAdapter extends BaseAdapter {
     }
     TextView title = (TextView) convertView.findViewById(R.id.recipe_title);
     TextView desc = (TextView) convertView.findViewById(R.id.recipe_desc);
+    ImageView img = (ImageView) convertView.findViewById(R.id.recipe_img);
     title.setText(mRecipes.get(position).getTitle());
     desc.setText(String.format("%d", mRecipes.get(position).getReadyInMinutes()));
+    Picasso.with(convertView.getContext()).load(String.format("%s%s", mImageBaseUrl, mRecipes.get(position).getImage()))
+        .resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(img);
     return convertView;
   }
 }

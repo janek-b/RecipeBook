@@ -1,7 +1,10 @@
 package com.janek.recipebook.models;
 
+import org.parceler.Parcel;
+
 import java.util.List;
 
+@Parcel
 public class RecipeListResponse {
   private List<RecipeList> results;
   private String baseUri;
@@ -11,6 +14,8 @@ public class RecipeListResponse {
   private int processingTimeMs;
   private long expires;
   private boolean isStale;
+
+  public RecipeListResponse() {}
 
   public RecipeListResponse(List<RecipeList> results, String baseUri, int offset, int number, int totalResults, int processingTimeMs, long expires, boolean isStale) {
     this.results = results;
