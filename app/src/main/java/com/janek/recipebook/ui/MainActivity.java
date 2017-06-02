@@ -17,7 +17,9 @@ import android.view.MenuItem;
 import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.RecipeList;
+import com.janek.recipebook.models.RecipeListResponse;
 import com.janek.recipebook.services.SpoonClient;
+import com.janek.recipebook.services.SpoonService;
 
 import java.io.IOException;
 import java.util.List;
@@ -75,46 +77,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setCheckedItem(id);
       }
     });
-
-    OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-    httpClient.addInterceptor(new Interceptor() {
-      @Override
-      public Response intercept(Chain chain) throws IOException {
-        Request original = chain.request();
-        Request request = original.newBuilder()
-            .header("X-Mashape-Key", Constants.SPOON_KEY)
-            .header("Accept", "application/json")
-            .method(original.method(), original.body())
-            .build();
-
-        return chain.proceed(request);
-      }
-    });
-    OkHttpClient client = httpClient.build();
-
-    retrofit = new Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(client).build();
   }
 
   public void runSearch(String search) {
-    SpoonClient client = retrofit.create(SpoonClient.class);
-    Call<ResponseBody> call = client.searchRecipes(true, search);
-    call.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-        try {
-          Log.d("test", response.body().string());
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+    SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
+    Call<RecipeListResponse> call = spoonClient.searchRecipes(true, search);
+    call.enqueue(new Callback<RecipeListResponse>() {
+      @Override public void onResponse(Call<RecipeListResponse> call, retrofit2.Response<RecipeListResponse> response) {
+        RecipeListFragment recipeListFragment = RecipeListFragment.newInstance(response.body().getResults());
+        loadNavFragment(recipeListFragment);
       }
-
-      @Override
-      public void onFailure(Call<ResponseBody> call, Throwable t) {
-        t.printStackTrace();
-      }
+      @Override public void onFailure(Call<RecipeListResponse> call, Throwable t) {t.printStackTrace();}
     });
   }
 

@@ -8,22 +8,23 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.janek.recipebook.R;
+import com.janek.recipebook.models.RecipeList;
+
+import java.util.List;
 
 
 public class RecipeListAdapter extends BaseAdapter {
   private Context mContext;
-  private String[] mRecipeTitles;
-  private String[] mRecipeDescriptions;
+  private List<RecipeList> mRecipes;
 
-  public RecipeListAdapter(Context context, String[] recipeTitles, String[] recipeDescriptions) {
+  public RecipeListAdapter(Context context, List<RecipeList> recipes) {
     this.mContext = context;
-    this.mRecipeTitles = recipeTitles;
-    this.mRecipeDescriptions = recipeDescriptions;
+    this.mRecipes = recipes;
   }
 
   @Override
   public int getCount() {
-    return mRecipeTitles.length;
+    return mRecipes.size();
   }
 
   @Override
@@ -44,8 +45,8 @@ public class RecipeListAdapter extends BaseAdapter {
     }
     TextView title = (TextView) convertView.findViewById(R.id.recipe_title);
     TextView desc = (TextView) convertView.findViewById(R.id.recipe_desc);
-    title.setText(mRecipeTitles[position]);
-    desc.setText(mRecipeDescriptions[position]);
+    title.setText(mRecipes.get(position).getTitle());
+    desc.setText(String.format("%d", mRecipes.get(position).getReadyInMinutes()));
     return convertView;
   }
 }
