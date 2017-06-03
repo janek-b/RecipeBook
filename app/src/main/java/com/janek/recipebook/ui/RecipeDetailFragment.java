@@ -8,10 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.janek.recipebook.R;
@@ -42,6 +45,9 @@ public class RecipeDetailFragment extends Fragment {
   @Bind(R.id.vegetarianIcon) ImageView vegetarianIcon;
   @Bind(R.id.ingredient_list) ListView ingredientListView;
 
+//  @Bind(R.id.scrollView) ScrollView scrollView;
+//  @Bind(R.id.frameLayoutWrapper) FrameLayout frameLayout;
+
 
 //  @Bind(R.id.expand_list) ExpandableListView mExpandListView;
 //  private RecipeDetailExpandAdapter mExpandListAdapter;
@@ -68,6 +74,10 @@ public class RecipeDetailFragment extends Fragment {
     View view = inflater.inflate(R.layout.recipe_detail, container, false);
     ButterKnife.bind(this, view);
     Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
+
+//    scrollView.getViewTreeObserver().addOnScrollChangedListener(new ScrollPositionObserver());
+
+
 //    String[] instructions = getResources().getStringArray(R.array.directions);
 //    String[] ingredients = getResources().getStringArray(R.array.ingredients);
 
@@ -115,4 +125,27 @@ public class RecipeDetailFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
   }
+
+
+//  private class ScrollPositionObserver implements ViewTreeObserver.OnScrollChangedListener {
+//
+//    private int imageViewHeight;
+//
+//    public ScrollPositionObserver() {
+//      imageViewHeight = getResources().getDimensionPixelSize(R.dimen.recipe_image_height);
+//    }
+//
+//    @Override
+//    public void onScrollChanged() {
+//      int scrollY = Math.min(Math.max(scrollView.getScrollY(), 0), imageViewHeight);
+//
+//      // changing position of ImageView
+//      recipeImageView.setTranslationY(scrollY / 2);
+//
+//      // alpha you could set to ActionBar background
+//      float alpha = scrollY / (float) imageViewHeight;
+//      recipeImageView.setAlpha(1 - alpha);
+//    }
+//  }
+
 }
