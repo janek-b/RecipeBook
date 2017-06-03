@@ -71,11 +71,6 @@ public class RecipeListFragment extends Fragment {
           }
           @Override public void onFailure(Call<Recipe> call, Throwable t) {t.printStackTrace();}
         });
-//        Fragment fragment = new RecipeDetailFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("title", recipeNames[position]);
-//        fragment.setArguments(bundle);
-//        ((MainActivity)getActivity()).loadFragment(fragment);
       }
     });
     return view;
