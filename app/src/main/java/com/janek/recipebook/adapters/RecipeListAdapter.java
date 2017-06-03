@@ -3,6 +3,7 @@ package com.janek.recipebook.adapters;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
   private String mImageBaseUrl;
 
   public RecipeListAdapter(RecipeListResponse recipeResponse) {
+    Log.d("adapter", recipeResponse.toString());
     this.mRecipes = recipeResponse.getResults();
     this.mImageBaseUrl = recipeResponse.getBaseUri();
   }

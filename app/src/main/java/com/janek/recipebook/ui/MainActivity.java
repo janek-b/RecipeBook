@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Call<RecipeListResponse> call = spoonClient.searchRecipes(search);
     call.enqueue(new Callback<RecipeListResponse>() {
       @Override public void onResponse(Call<RecipeListResponse> call, retrofit2.Response<RecipeListResponse> response) {
+        Log.d("Main Activity", response.body().toString());
         loadNavFragment(RecipeListFragment.newInstance(response.body()));
         loading.dismiss();
       }
