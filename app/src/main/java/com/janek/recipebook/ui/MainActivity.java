@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
           id = R.id.nav_home;
         } else if (fragment instanceof AboutFragment) {
           id = R.id.nav_about;
-        } else if (fragment instanceof RecipeListFragment) {
-          id = R.id.nav_recipe_list;
         } else {
           return;
         }
@@ -127,9 +125,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         break;
       case R.id.nav_about:
         loadNavFragment(new AboutFragment());
-        break;
-      case R.id.nav_recipe_list:
-        loadNavFragment(new RecipeListFragment());
         break;
       default:
         loadNavFragment(new HomeFragment());
