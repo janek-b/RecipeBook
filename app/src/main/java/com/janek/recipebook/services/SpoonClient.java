@@ -19,4 +19,6 @@ public interface SpoonClient {
   Call<Recipe> getRecipe(@Path("recipeId") int recipeId);
 
   //TODO add api call for analyzed instructions
+
+  //TODO add random joke api call
 }

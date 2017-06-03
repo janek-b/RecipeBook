@@ -29,12 +29,10 @@ import retrofit2.Response;
 
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeListViewHolder> {
-  private Context mContext;
   private List<RecipeList> mRecipes;
   private String mImageBaseUrl;
 
-  public RecipeListAdapter(Context context, RecipeListResponse recipeResponse) {
-    this.mContext = context;
+  public RecipeListAdapter(RecipeListResponse recipeResponse) {
     this.mRecipes = recipeResponse.getResults();
     this.mImageBaseUrl = recipeResponse.getBaseUri();
   }
@@ -78,15 +76,15 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
       Picasso.with(mContext).load(String.format("%s%s", mImageBaseUrl, recipeList.getImage()))
           .resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(img);
     }
+
     @Override
     public void onClick(View v) {
+      RecipeList recipe = mRecipes.get(getLayoutPosition());
       final ProgressDialog loading = new ProgressDialog(mContext);
       loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
       loading.setMessage("Getting recipe Details...");
       loading.setIndeterminate(true);
       loading.show();
-
-      RecipeList recipe = mRecipes.get(getLayoutPosition());
 
       SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
       Call<Recipe> call = spoonClient.getRecipe(recipe.getId());
@@ -94,7 +92,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         @Override
         public void onResponse(Call<Recipe> call, Response<Recipe> response) {
           RecipeDetailFragment recipeDetailFragment = RecipeDetailFragment.newInstance(response.body());
-
           ((MainActivity)mContext).loadFragment(recipeDetailFragment);
           loading.dismiss();
         }

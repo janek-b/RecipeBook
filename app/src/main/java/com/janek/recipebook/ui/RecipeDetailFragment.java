@@ -4,19 +4,26 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.janek.recipebook.R;
 import com.janek.recipebook.adapters.RecipeDetailExpandAdapter;
+import com.janek.recipebook.models.Ingredient;
 import com.janek.recipebook.models.Recipe;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,8 +36,15 @@ public class RecipeDetailFragment extends Fragment {
   @Bind(R.id.recipe_detail_instructions) TextView instructionsTextView;
   @Bind(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
   @Bind(R.id.recipe_detail_img) ImageView recipeImageView;
-  @Bind(R.id.expand_list) ExpandableListView mExpandListView;
-  private RecipeDetailExpandAdapter mExpandListAdapter;
+  @Bind(R.id.dairyFreeIcon) ImageView dairyFreeIcon;
+  @Bind(R.id.glutenFreeIcon) ImageView glutenFreeIcon;
+  @Bind(R.id.veganIcon) ImageView veganIcon;
+  @Bind(R.id.vegetarianIcon) ImageView vegetarianIcon;
+  @Bind(R.id.ingredient_list) ListView ingredientListView;
+
+
+//  @Bind(R.id.expand_list) ExpandableListView mExpandListView;
+//  private RecipeDetailExpandAdapter mExpandListAdapter;
 
   private Recipe recipe;
 
@@ -72,8 +86,31 @@ public class RecipeDetailFragment extends Fragment {
     titleTextView.setText(recipe.getTitle());
     cookTimeTextView.setText(String.format("Cook Time: %d minutes", recipe.getCookTime()));
     instructionsTextView.setText(recipe.getInstructions());
+
+    setVisibility(dairyFreeIcon, recipe.isDairyFree());
+    setVisibility(glutenFreeIcon, recipe.isGlutenFree());
+    setVisibility(veganIcon, recipe.isVegan());
+    setVisibility(vegetarianIcon, recipe.isVegetarian());
+
+    List<String> ingredients = new ArrayList<>();
+    for (Ingredient ingredient : recipe.getIngredients()) {
+      Log.d("test", ingredient.getOriginalString());
+      ingredients.add(ingredient.getOriginalString());
+    }
+    String[] ingredientsArray = ingredients.toArray(new String[ingredients.size()]);
+    Log.d("test", ingredientsArray.toString());
+    ArrayAdapter ingredientAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, ingredientsArray);
+    ingredientListView.setAdapter(ingredientAdapter);
     titleTextView.setTypeface(raleway);
     return view;
+  }
+
+  public void setVisibility(ImageView icon, boolean visible) {
+    if (visible) {
+      icon.setVisibility(View.VISIBLE);
+    } else {
+      icon.setVisibility(View.INVISIBLE);
+    }
   }
 
   @Override
