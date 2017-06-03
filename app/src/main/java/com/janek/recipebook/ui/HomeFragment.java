@@ -44,7 +44,6 @@ public class HomeFragment extends Fragment {
         if (searchInput.equals("")) {
           Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
         } else {
-          Toast.makeText(getActivity(), String.format("You Searched for %s \n Search is current not available", searchInput), Toast.LENGTH_LONG).show();
           ((MainActivity)getActivity()).runSearch(searchInput);
         }
       }

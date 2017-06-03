@@ -1,5 +1,6 @@
 package com.janek.recipebook.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -63,14 +64,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   }
 
   public void runSearch(String search) {
+    final ProgressDialog loading = new ProgressDialog(MainActivity.this);
+    loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    loading.setMessage(String.format("Searching for %s recipes...", search));
+    loading.setIndeterminate(true);
+    loading.show();
+
     SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
     Call<RecipeListResponse> call = spoonClient.searchRecipes(search);
     call.enqueue(new Callback<RecipeListResponse>() {
       @Override public void onResponse(Call<RecipeListResponse> call, retrofit2.Response<RecipeListResponse> response) {
-        RecipeListFragment recipeListFragment = RecipeListFragment.newInstance(response.body());
-        loadNavFragment(recipeListFragment);
+        loadNavFragment(RecipeListFragment.newInstance(response.body()));
+        loading.dismiss();
       }
-      @Override public void onFailure(Call<RecipeListResponse> call, Throwable t) {t.printStackTrace();}
+      @Override public void onFailure(Call<RecipeListResponse> call, Throwable t) {
+        t.printStackTrace();
+        //TODO show error message
+      }
     });
   }
 

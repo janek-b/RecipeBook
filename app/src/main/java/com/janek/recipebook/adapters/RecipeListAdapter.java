@@ -55,7 +55,7 @@ public class RecipeListAdapter extends BaseAdapter {
     TextView desc = (TextView) convertView.findViewById(R.id.recipe_desc);
     ImageView img = (ImageView) convertView.findViewById(R.id.recipe_img);
     title.setText(mRecipes.get(position).getTitle());
-    desc.setText(String.format("%d", mRecipes.get(position).getCookTime()));
+    desc.setText(String.format("Cook Time: %d minutes", mRecipes.get(position).getCookTime()));
     Picasso.with(convertView.getContext()).load(String.format("%s%s", mImageBaseUrl, mRecipes.get(position).getImage()))
         .resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(img);
     return convertView;

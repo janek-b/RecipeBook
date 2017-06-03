@@ -8,22 +8,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.janek.recipebook.R;
 import com.janek.recipebook.adapters.RecipeDetailExpandAdapter;
 import com.janek.recipebook.models.Recipe;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
-
-import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class RecipeDetailFragment extends Fragment {
-  @Bind(R.id.recipe_detail_name) TextView mTitle;
-  @Bind(R.id.recipe_detail_instructions) TextView mInstructions;
+  private static final int MAX_WIDTH = 400;
+  private static final int MAX_HEIGHT = 300;
+
+  @Bind(R.id.recipe_detail_name) TextView titleTextView;
+  @Bind(R.id.recipe_detail_instructions) TextView instructionsTextView;
+  @Bind(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
+  @Bind(R.id.recipe_detail_img) ImageView recipeImageView;
   @Bind(R.id.expand_list) ExpandableListView mExpandListView;
   private RecipeDetailExpandAdapter mExpandListAdapter;
 
@@ -63,9 +68,11 @@ public class RecipeDetailFragment extends Fragment {
 //    mExpandListAdapter = new RecipeDetailExpandAdapter(getActivity(), headers, childData);
 //    mExpandListView.setAdapter(mExpandListAdapter);
 
-    mTitle.setText(recipe.getTitle());
-    mInstructions.setText(recipe.getInstructions());
-    mTitle.setTypeface(raleway);
+    Picasso.with(getContext()).load(recipe.getImage()).resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(recipeImageView);
+    titleTextView.setText(recipe.getTitle());
+    cookTimeTextView.setText(String.format("Cook Time: %d minutes", recipe.getCookTime()));
+    instructionsTextView.setText(recipe.getInstructions());
+    titleTextView.setTypeface(raleway);
     return view;
   }
 

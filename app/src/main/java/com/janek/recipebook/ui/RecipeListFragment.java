@@ -1,5 +1,6 @@
 package com.janek.recipebook.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -61,6 +62,12 @@ public class RecipeListFragment extends Fragment {
     mRecipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        final ProgressDialog loading = new ProgressDialog(getContext());
+        loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loading.setMessage("Getting recipe Details...");
+        loading.setIndeterminate(true);
+        loading.show();
+
         SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
         Call<Recipe> call = spoonClient.getRecipe(recipeResponse.getResults().get(position).getId());
         call.enqueue(new Callback<Recipe>() {
@@ -68,6 +75,7 @@ public class RecipeListFragment extends Fragment {
           public void onResponse(Call<Recipe> call, Response<Recipe> response) {
             RecipeDetailFragment recipeDetailFragment = RecipeDetailFragment.newInstance(response.body());
             ((MainActivity)getActivity()).loadFragment(recipeDetailFragment);
+            loading.dismiss();
           }
           @Override public void onFailure(Call<Recipe> call, Throwable t) {t.printStackTrace();}
         });
