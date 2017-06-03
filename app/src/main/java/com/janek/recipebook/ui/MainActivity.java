@@ -50,13 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       public void onBackStackChanged() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         int id;
-        if (fragment instanceof HomeFragment) {
-          id = R.id.nav_home;
-        } else if (fragment instanceof AboutFragment) {
-          id = R.id.nav_about;
-        } else {
-          return;
-        }
+        if (fragment instanceof HomeFragment) {id = R.id.nav_home;}
+        else if (fragment instanceof AboutFragment) {id = R.id.nav_about;}
+        else {return;}
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setCheckedItem(id);
       }

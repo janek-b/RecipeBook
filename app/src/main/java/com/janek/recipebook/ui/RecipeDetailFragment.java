@@ -33,7 +33,7 @@ public class RecipeDetailFragment extends Fragment {
   private static final int MAX_HEIGHT = 300;
 
   @Bind(R.id.recipe_detail_name) TextView titleTextView;
-  @Bind(R.id.recipe_detail_instructions) TextView instructionsTextView;
+//  @Bind(R.id.recipe_detail_instructions) TextView instructionsTextView;
   @Bind(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
   @Bind(R.id.recipe_detail_img) ImageView recipeImageView;
   @Bind(R.id.dairyFreeIcon) ImageView dairyFreeIcon;
@@ -85,7 +85,7 @@ public class RecipeDetailFragment extends Fragment {
     Picasso.with(getContext()).load(recipe.getImage()).resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(recipeImageView);
     titleTextView.setText(recipe.getTitle());
     cookTimeTextView.setText(String.format("Cook Time: %d minutes", recipe.getCookTime()));
-    instructionsTextView.setText(recipe.getInstructions());
+//    instructionsTextView.setText(recipe.getInstructions());
 
     setVisibility(dairyFreeIcon, recipe.isDairyFree());
     setVisibility(glutenFreeIcon, recipe.isGlutenFree());
@@ -94,11 +94,9 @@ public class RecipeDetailFragment extends Fragment {
 
     List<String> ingredients = new ArrayList<>();
     for (Ingredient ingredient : recipe.getIngredients()) {
-      Log.d("test", ingredient.getOriginalString());
       ingredients.add(ingredient.getOriginalString());
     }
     String[] ingredientsArray = ingredients.toArray(new String[ingredients.size()]);
-    Log.d("test", ingredientsArray.toString());
     ArrayAdapter ingredientAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, ingredientsArray);
     ingredientListView.setAdapter(ingredientAdapter);
     titleTextView.setTypeface(raleway);
