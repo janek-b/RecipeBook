@@ -1,6 +1,8 @@
 package com.janek.recipebook.ui;
 
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,9 +25,11 @@ import org.parceler.Parcels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RecipeDetailFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment implements View.OnClickListener {
   @Bind(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
+  @Bind(R.id.recipe_detail_servings) TextView servingsTextView;
   @Bind(R.id.ingredients_label) TextView ingredientsLabel;
+  @Bind(R.id.websiteTextView) TextView websiteTextView;
   @Bind(R.id.dairyFreeIcon) ImageView dairyFreeIcon;
   @Bind(R.id.glutenFreeIcon) ImageView glutenFreeIcon;
   @Bind(R.id.veganIcon) ImageView veganIcon;
@@ -55,11 +59,15 @@ public class RecipeDetailFragment extends Fragment {
     ButterKnife.bind(this, view);
     Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
     cookTimeTextView.setTypeface(raleway);
+    servingsTextView.setTypeface(raleway);
     ingredientsLabel.setTypeface(raleway);
+    websiteTextView.setTypeface(raleway);
     setVisibility(dairyFreeIcon, recipe.isDairyFree());
     setVisibility(glutenFreeIcon, recipe.isGlutenFree());
     setVisibility(veganIcon, recipe.isVegan());
     setVisibility(vegetarianIcon, recipe.isVegetarian());
+
+    websiteTextView.setOnClickListener(this);
     return view;
   }
 
@@ -67,10 +75,10 @@ public class RecipeDetailFragment extends Fragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     ((MainActivity)getActivity()).setRecipeTitle(recipe.getTitle());
     ((MainActivity)getActivity()).setBackdropImg(recipe.getImage());
     cookTimeTextView.setText(String.format("Cook Time: %d minutes", recipe.getCookTime()));
+    servingsTextView.setText(String.format("Servings: %d", recipe.getServings()));
     for (Ingredient ingredient : recipe.getIngredients()) {
       TextView ingredientView = new TextView(getContext());
       ingredientView.setText(ingredient.getOriginalString());
@@ -84,7 +92,15 @@ public class RecipeDetailFragment extends Fragment {
     if (visible) {
       icon.setVisibility(View.VISIBLE);
     } else {
-      icon.setVisibility(View.INVISIBLE);
+      icon.setVisibility(View.GONE);
+    }
+  }
+
+  @Override
+  public void onClick(View v) {
+    if (v == websiteTextView) {
+      Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(recipe.getSourceUrl()));
+      startActivity(webIntent);
     }
   }
 

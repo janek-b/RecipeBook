@@ -41,16 +41,42 @@
                     android:layout_alignParentTop="true"
                     android:text="Cook Time"
                     android:textColor="@color/colorTextIcons"
-                    android:textSize="24sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/recipe_detail_servings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/recipe_detail_cook_time"
+                    android:layout_alignStart="@+id/recipe_detail_cook_time"
+                    android:layout_below="@+id/recipe_detail_cook_time"
+                    android:layout_marginTop="8dp"
+                    android:text="Servings"
+                    android:textColor="@color/colorTextIcons"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/websiteTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@drawable/ic_exit_to_app_white_24dp"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:text="View Online"
+                    android:textColor="@color/colorTextIcons"
                     android:textStyle="bold"/>
 
                 <ImageView
                     android:id="@+id/dairyFreeIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignLeft="@+id/recipe_detail_cook_time"
-                    android:layout_alignStart="@+id/recipe_detail_cook_time"
-                    android:layout_below="@+id/recipe_detail_cook_time"
+                    android:layout_alignLeft="@+id/recipe_detail_servings"
+                    android:layout_alignStart="@+id/recipe_detail_servings"
+                    android:layout_below="@+id/recipe_detail_servings"
+                    android:layout_marginRight="16dp"
                     android:layout_marginTop="16dp"
                     app:srcCompat="@drawable/icon_dairy_free"/>
 
@@ -58,33 +84,32 @@
                     android:id="@+id/glutenFreeIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignTop="@+id/dairyFreeIcon"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_below="@+id/recipe_detail_servings"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_toRightOf="@+id/dairyFreeIcon"
                     app:srcCompat="@drawable/icon_glutenfree"/>
-
-                <ImageView
-                    android:id="@+id/veganIcon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignTop="@+id/vegetarianIcon"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_toEndOf="@+id/vegetarianIcon"
-                    android:layout_toRightOf="@+id/vegetarianIcon"
-                    app:srcCompat="@drawable/icon_vegan"/>
 
                 <ImageView
                     android:id="@+id/vegetarianIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_alignTop="@+id/glutenFreeIcon"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_toEndOf="@+id/glutenFreeIcon"
+                    android:layout_below="@+id/recipe_detail_servings"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_toRightOf="@+id/glutenFreeIcon"
                     app:srcCompat="@drawable/icon_vegetarian"/>
+
+                <ImageView
+                    android:id="@+id/veganIcon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/recipe_detail_servings"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_toRightOf="@+id/vegetarianIcon"
+                    app:srcCompat="@drawable/icon_vegan"/>
+
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
