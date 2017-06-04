@@ -3,11 +3,13 @@ package com.janek.recipebook.ui;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   @Bind(R.id.nav_view) NavigationView navigationView;
   @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
   @Bind(R.id.toolbarTitle) TextView toolbarTitle;
+  @Bind(R.id.tabs) TabLayout tabs;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -124,14 +127,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   public void disableCollapse() {
     recipeImgBackdrop.setVisibility(View.GONE);
     toolbarTitle.setVisibility(View.VISIBLE);
-//    recipeTitleContainer.setVisibility(View.GONE);
+    tabs.setVisibility(View.GONE);
     collapsingToolbar.setTitleEnabled(false);
   }
 
   public void enableCollapse() {
     recipeImgBackdrop.setVisibility(View.VISIBLE);
     toolbarTitle.setVisibility(View.GONE);
-//    recipeTitleContainer.setVisibility(View.VISIBLE);
+    tabs.setVisibility(View.VISIBLE);
     collapsingToolbar.setTitleEnabled(true);
   }
 
@@ -147,6 +150,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   public void setToolbarTitle(String title) {
     setTitle("");
     toolbarTitle.setText(title);
+  }
+
+  public void setTabLayout(ViewPager viewPager) {
+    tabs.setupWithViewPager(viewPager);
   }
 
 
