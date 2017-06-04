@@ -1,8 +1,9 @@
 package com.janek.recipebook.ui;
 
 import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
+//import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.Recipe;
@@ -24,6 +27,8 @@ import com.janek.recipebook.models.RecipeListResponse;
 import com.janek.recipebook.services.SpoonClient;
 import com.janek.recipebook.services.SpoonService;
 import com.squareup.picasso.Picasso;
+
+import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,12 +48,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   @Bind(R.id.nav_view) NavigationView navigationView;
   @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
 
+//  @Bind(R.id.recipe_title_container) LinearLayout recipeTitleContainer;
+//  @Bind(R.id.recipe_title) TextView recipeTitleTextView;
+//  @Bind(R.id.recipe_cook_time) TextView recipeCookTimeTextView;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
+    Typeface raleway = Typeface.createFromAsset(getAssets(), "fonts/raleway-regular.ttf");
 
+    collapsingToolbar.setCollapsedTitleTypeface(raleway);
+    collapsingToolbar.setExpandedTitleTypeface(raleway);
+//    collapsingToolbar.setExpandedTitleTextAppearance(R.style.TextAppearance_AppCompat_Title);
     loading = new ProgressDialog(MainActivity.this);
     loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     loading.setIndeterminate(true);
@@ -120,11 +133,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
   public void disableCollapse() {
     recipeImgBackdrop.setVisibility(View.GONE);
+//    recipeTitleContainer.setVisibility(View.GONE);
     collapsingToolbar.setTitleEnabled(false);
   }
 
   public void enableCollapse() {
     recipeImgBackdrop.setVisibility(View.VISIBLE);
+//    recipeTitleContainer.setVisibility(View.VISIBLE);
     collapsingToolbar.setTitleEnabled(true);
   }
 
@@ -132,6 +147,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   public void setBackdropImg(String url) {
     Picasso.with(this).load(url).resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(recipeImgBackdrop);
   }
+
+//  public void setRecipeTitle(String title, int cookTime) {
+//    recipeTitleTextView.setText(title);
+//    recipeCookTimeTextView.setText(String.format("Cook time: %d minutes", cookTime));
+//  }
 
 
   @Override
