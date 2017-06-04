@@ -8,20 +8,20 @@ import java.util.List;
 
 @Parcel
 public class Recipe {
-  private boolean vegetarian;
-  private boolean vegan;
-  private boolean glutenFree;
-  private boolean dairyFree;
-  private int servings;
-  private String sourceUrl;
+  boolean vegetarian;
+  boolean vegan;
+  boolean glutenFree;
+  boolean dairyFree;
+  int servings;
+  String sourceUrl;
   @SerializedName("extendedIngredients")
-  private List<Ingredient> ingredients;
-  private int id;
-  private String title;
+  List<Ingredient> ingredients;
+  int id;
+  String title;
   @SerializedName("readyInMinutes")
-  private int cookTime;
-  private String image;
-  private String instructions;
+  int cookTime;
+  String image;
+  String instructions;
 
   public Recipe() {}
 

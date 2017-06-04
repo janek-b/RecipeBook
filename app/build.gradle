@@ -5,12 +5,23 @@ android {
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.janek.recipebook"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        jackOptions {
+            enabled true
+            jackInProcess true
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
+
+
     buildTypes {
         release {
             minifyEnabled false

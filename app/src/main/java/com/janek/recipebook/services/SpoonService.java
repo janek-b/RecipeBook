@@ -12,16 +12,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SpoonService {
 
   private static OkHttpClient httpClient = new OkHttpClient.Builder()
-      .addInterceptor(new Interceptor() {
-        @Override
-        public Response intercept(Interceptor.Chain chain) throws IOException {
+      .addInterceptor((Interceptor.Chain chain) -> {
           Request original = chain.request();
           Request request = original.newBuilder()
               .header("X-Mashape-Key", Constants.SPOON_KEY)
               .header("Accept", "application/json")
               .method(original.method(), original.body()).build();
           return chain.proceed(request);
-        }
       }).build();
 
   private static Retrofit retrofit = new Retrofit.Builder()

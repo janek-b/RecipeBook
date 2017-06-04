@@ -6,14 +6,14 @@ import java.util.List;
 
 @Parcel
 public class RecipeListResponse {
-  private List<RecipeList> results;
-  private String baseUri;
-  private int offset;
-  private int number;
-  private int totalResults;
-  private int processingTimeMs;
-  private long expires;
-  private boolean isStale;
+  List<RecipeList> results;
+  String baseUri;
+  int offset;
+  int number;
+  int totalResults;
+  int processingTimeMs;
+  long expires;
+  boolean isStale;
 
   public RecipeListResponse() {}
 

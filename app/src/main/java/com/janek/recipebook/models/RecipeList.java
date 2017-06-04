@@ -6,12 +6,12 @@ import org.parceler.Parcel;
 
 @Parcel
 public class RecipeList {
-  private int id;
-  private String title;
+  int id;
+  String title;
   @SerializedName("readyInMinutes")
-  private int cookTime;
-  private String image;
-  private String[] imageUrls;
+  int cookTime;
+  String image;
+  String[] imageUrls;
 
   public RecipeList() {}
 

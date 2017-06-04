@@ -3,7 +3,6 @@ package com.janek.recipebook.ui;
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
-//import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,12 +12,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.janek.recipebook.R;
@@ -34,7 +31,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
   private static final String BACK_STACK_ROOT_TAG = "root_fragment";
@@ -71,21 +67,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     disableCollapse();
 
     // Listen for fragment changes and update selected nav item
-    getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-      @Override
-      public void onBackStackChanged() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (fragment instanceof HomeFragment) {
-          disableCollapse();
-          navigationView.setCheckedItem(R.id.nav_home);
-        } else if (fragment instanceof AboutFragment) {
-          disableCollapse();
-          navigationView.setCheckedItem(R.id.nav_about);
-        } else if (fragment instanceof RecipeDetailFragment) {
-          enableCollapse();
-        } else {
-          disableCollapse();
-        }
+    getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+      Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+      if (fragment instanceof HomeFragment) {
+        disableCollapse();
+        navigationView.setCheckedItem(R.id.nav_home);
+      } else if (fragment instanceof AboutFragment) {
+        disableCollapse();
+        navigationView.setCheckedItem(R.id.nav_about);
+      } else if (fragment instanceof RecipeDetailFragment) {
+        enableCollapse();
+      } else {
+        disableCollapse();
       }
     });
     // Initialize with HomeFragment fragment

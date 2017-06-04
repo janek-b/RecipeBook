@@ -4,16 +4,16 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Ingredient {
-  private int id;
-  private String aisle;
-  private String image;
-  private String name;
-  private float amount;
-  private String unit;
-  private String unitShort;
-  private String unitLong;
-  private String originalString;
-  private String[] metaInformation;
+  int id;
+  String aisle;
+  String image;
+  String name;
+  float amount;
+  String unit;
+  String unitShort;
+  String unitLong;
+  String originalString;
+  String[] metaInformation;
 
   public Ingredient() {}
 
