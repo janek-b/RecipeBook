@@ -144,6 +144,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Picasso.with(this).load(url).resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(recipeImgBackdrop);
   }
 
+  public void setRecipeTitle(String title) {
+    collapsingToolbar.setTitle(title);
+  }
+
 
   @Override
   public void onBackPressed() {

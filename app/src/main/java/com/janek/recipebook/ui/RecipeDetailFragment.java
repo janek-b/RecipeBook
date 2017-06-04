@@ -67,7 +67,8 @@ public class RecipeDetailFragment extends Fragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    getActivity().setTitle(recipe.getTitle());
+
+    ((MainActivity)getActivity()).setRecipeTitle(recipe.getTitle());
     ((MainActivity)getActivity()).setBackdropImg(recipe.getImage());
     cookTimeTextView.setText(String.format("Cook Time: %d minutes", recipe.getCookTime()));
     for (Ingredient ingredient : recipe.getIngredients()) {
