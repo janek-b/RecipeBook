@@ -2,10 +2,10 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light">
+    android:background="@android:color/background_light"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <ImageView
         android:id="@+id/recipe_detail_img"
@@ -27,6 +27,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="7dp"
         android:text="Recipe Name"
         android:textColor="@color/colorTextIcons"
         android:textSize="30sp"
@@ -34,157 +35,115 @@
         app:layout_constraintHorizontal_bias="0.117"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recipe_detail_img"
-        android:layout_marginTop="7dp"/>
+        app:layout_constraintTop_toTopOf="@+id/recipe_detail_img"/>
 
     <!--<ExpandableListView-->
-        <!--android:id="@+id/expand_list"-->
-        <!--android:layout_width="385dp"-->
-        <!--android:layout_height="78dp"-->
-        <!--android:layout_marginBottom="0dp"-->
-        <!--android:layout_marginLeft="0dp"-->
-        <!--android:layout_marginRight="0dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="0.0"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--tools:layout_editor_absoluteY="433dp"/>-->
+    <!--android:id="@+id/expand_list"-->
+    <!--android:layout_width="385dp"-->
+    <!--android:layout_height="78dp"-->
+    <!--android:layout_marginBottom="0dp"-->
+    <!--android:layout_marginLeft="0dp"-->
+    <!--android:layout_marginRight="0dp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintHorizontal_bias="0.0"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--tools:layout_editor_absoluteY="433dp"/>-->
 
     <!--<TextView-->
-        <!--android:id="@+id/recipe_detail_instructions"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:text="Instructions"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/expand_list"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/recipe_detail_img"/>-->
+    <!--android:id="@+id/recipe_detail_instructions"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:layout_marginLeft="8dp"-->
+    <!--android:layout_marginRight="8dp"-->
+    <!--android:layout_marginTop="8dp"-->
+    <!--android:text="Instructions"-->
+    <!--app:layout_constraintBottom_toTopOf="@+id/expand_list"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toBottomOf="@+id/recipe_detail_img"/>-->
 
     <TextView
         android:id="@+id/recipe_detail_cook_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:text="Cook Time"
         android:textColor="@color/colorTextIcons"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/recipe_detail_img"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintRight_toLeftOf="@+id/dairyFreeIcon"
-        android:layout_marginRight="8dp"
-        app:layout_constraintHorizontal_bias="0.05"/>
+        app:layout_constraintRight_toLeftOf="@+id/dairyFreeIcon"/>
 
     <ImageView
         android:id="@+id/dairyFreeIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        app:srcCompat="@drawable/icon_dairy_free"
-        android:layout_marginRight="16dp"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/recipe_detail_img"
-        android:layout_marginBottom="8dp"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/icon_dairy_free"/>
 
     <ImageView
         android:id="@+id/glutenFreeIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toTopOf="@+id/dairyFreeIcon"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/icon_glutenfree"
-        android:layout_marginEnd="16dp"/>
+        app:srcCompat="@drawable/icon_glutenfree"/>
 
     <ImageView
         android:id="@+id/veganIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toTopOf="@+id/glutenFreeIcon"
         app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/icon_vegan"
-        android:layout_marginEnd="16dp"/>
+        app:srcCompat="@drawable/icon_vegan"/>
 
     <ImageView
         android:id="@+id/vegetarianIcon"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/veganIcon"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_vegetarian"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/veganIcon"
         app:layout_constraintVertical_bias="1.0"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"/>
+        app:srcCompat="@drawable/icon_vegetarian"/>
 
     <ListView
         android:id="@+id/ingredient_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_detail_img"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_detail_img"/>
 
-    <!--<android.support.v4.widget.NestedScrollView-->
-        <!--android:id="@+id/nestedScrollView"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/recipe_detail_img">-->
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical">-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/instructionsLabel"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Instructions"-->
-                <!--android:textAlignment="center"-->
-                <!--android:textSize="24sp"-->
-                <!--android:textStyle="bold"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/recipe_detail_instructions"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="10dp"-->
-                <!--android:text="Instructions"/>-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/IngredientLabel"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="Ingredients"-->
-                <!--android:textAlignment="center"-->
-                <!--android:textSize="24sp"-->
-                <!--android:textStyle="bold"/>-->
-
-        <!--</LinearLayout>-->
-    <!--</android.support.v4.widget.NestedScrollView>-->
 
 </android.support.constraint.ConstraintLayout>

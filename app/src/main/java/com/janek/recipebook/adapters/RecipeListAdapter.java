@@ -1,6 +1,5 @@
 package com.janek.recipebook.adapters;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,22 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.janek.recipebook.R;
-import com.janek.recipebook.models.Recipe;
 import com.janek.recipebook.models.RecipeList;
 import com.janek.recipebook.models.RecipeListResponse;
-import com.janek.recipebook.services.SpoonClient;
-import com.janek.recipebook.services.SpoonService;
 import com.janek.recipebook.ui.MainActivity;
-import com.janek.recipebook.ui.RecipeDetailFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeListViewHolder> {
@@ -34,7 +26,6 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
   private String mImageBaseUrl;
 
   public RecipeListAdapter(RecipeListResponse recipeResponse) {
-    Log.d("adapter", recipeResponse.toString());
     this.mRecipes = recipeResponse.getResults();
     this.mImageBaseUrl = recipeResponse.getBaseUri();
   }
@@ -47,7 +38,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
   }
 
   @Override
-  public void onBindViewHolder(RecipeListViewHolder holder, int position) {
+  public void onBindViewHolder(RecipeListViewHolder holder, final int position) {
     holder.bindRecipeList(mRecipes.get(position));
   }
 
@@ -82,23 +73,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     @Override
     public void onClick(View v) {
       RecipeList recipe = mRecipes.get(getLayoutPosition());
-      final ProgressDialog loading = new ProgressDialog(mContext);
-      loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-      loading.setMessage("Getting recipe Details...");
-      loading.setIndeterminate(true);
-      loading.show();
-
-      SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-      Call<Recipe> call = spoonClient.getRecipe(recipe.getId());
-      call.enqueue(new Callback<Recipe>() {
-        @Override
-        public void onResponse(Call<Recipe> call, Response<Recipe> response) {
-          RecipeDetailFragment recipeDetailFragment = RecipeDetailFragment.newInstance(response.body());
-          ((MainActivity)mContext).loadFragment(recipeDetailFragment);
-          loading.dismiss();
-        }
-        @Override public void onFailure(Call<Recipe> call, Throwable t) {t.printStackTrace();}
-      });
+      ((MainActivity)mContext).getRecipe(recipe.getId());
     }
   }
 }

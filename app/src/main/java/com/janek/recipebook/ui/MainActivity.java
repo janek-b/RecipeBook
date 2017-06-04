@@ -2,6 +2,7 @@ package com.janek.recipebook.ui;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,63 +15,82 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.janek.recipebook.R;
+import com.janek.recipebook.models.Recipe;
 import com.janek.recipebook.models.RecipeListResponse;
 import com.janek.recipebook.services.SpoonClient;
 import com.janek.recipebook.services.SpoonService;
+import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
   private static final String BACK_STACK_ROOT_TAG = "root_fragment";
+  private static final int MAX_WIDTH = 400;
+  private static final int MAX_HEIGHT = 300;
+  private ProgressDialog loading;
+
+  @Bind(R.id.recipe_img_backdrop) ImageView recipeImgBackdrop;
+  @Bind(R.id.toolbar) Toolbar toolbar;
+  @Bind(R.id.drawer_layout) DrawerLayout drawer;
+  @Bind(R.id.nav_view) NavigationView navigationView;
+  @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
+    ButterKnife.bind(this);
 
-    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+    loading = new ProgressDialog(MainActivity.this);
+    loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    loading.setIndeterminate(true);
+
+    setSupportActionBar(toolbar);
+    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
     drawer.addDrawerListener(toggle);
     toggle.syncState();
-
-    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
     navigationView.setNavigationItemSelectedListener(this);
+    disableCollapse();
 
-    // Initialize with HomeFragment fragment
-    getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
     // Listen for fragment changes and update selected nav item
     getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
       @Override
       public void onBackStackChanged() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        int id;
-        if (fragment instanceof HomeFragment) {id = R.id.nav_home;}
-        else if (fragment instanceof AboutFragment) {id = R.id.nav_about;}
-        else {return;}
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setCheckedItem(id);
+        if (fragment instanceof HomeFragment) {
+          disableCollapse();
+          navigationView.setCheckedItem(R.id.nav_home);
+        } else if (fragment instanceof AboutFragment) {
+          disableCollapse();
+          navigationView.setCheckedItem(R.id.nav_about);
+        } else if (fragment instanceof RecipeDetailFragment) {
+          enableCollapse();
+        } else {
+          disableCollapse();
+        }
       }
     });
+    // Initialize with HomeFragment fragment
+    getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
   }
 
+
   public void runSearch(String search) {
-    final ProgressDialog loading = new ProgressDialog(MainActivity.this);
-    loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     loading.setMessage(String.format("Searching for %s recipes...", search));
-    loading.setIndeterminate(true);
     loading.show();
 
     SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
     Call<RecipeListResponse> call = spoonClient.searchRecipes(search);
     call.enqueue(new Callback<RecipeListResponse>() {
       @Override public void onResponse(Call<RecipeListResponse> call, retrofit2.Response<RecipeListResponse> response) {
-        Log.d("Main Activity", response.body().toString());
         loadNavFragment(RecipeListFragment.newInstance(response.body()));
         loading.dismiss();
       }
@@ -81,16 +101,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     });
   }
 
+  public void getRecipe(int id) {
+    loading.setMessage("Getting recipe Details...");
+    loading.show();
+
+    SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
+    Call<Recipe> call = spoonClient.getRecipe(id);
+    call.enqueue(new Callback<Recipe>() {
+      @Override
+      public void onResponse(Call<Recipe> call, retrofit2.Response<Recipe> response) {
+        loadFragment(RecipeDetailFragment.newInstance(response.body()));
+        loading.dismiss();
+      }
+      @Override public void onFailure(Call<Recipe> call, Throwable t) {t.printStackTrace();}
+    });
+  }
+
+
+  public void disableCollapse() {
+    recipeImgBackdrop.setVisibility(View.GONE);
+    collapsingToolbar.setTitleEnabled(false);
+  }
+
+  public void enableCollapse() {
+    recipeImgBackdrop.setVisibility(View.VISIBLE);
+    collapsingToolbar.setTitleEnabled(true);
+  }
+
+
+  public void setBackdropImg(String url) {
+    Picasso.with(this).load(url).resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(recipeImgBackdrop);
+  }
+
+
   @Override
   public void onBackPressed() {
-    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     if (drawer.isDrawerOpen(GravityCompat.START)) {
       drawer.closeDrawer(GravityCompat.START);
     } else {
       super.onBackPressed();
     }
   }
-
 
 // Tool bar right menu items handled here. Add search bar here to make it available on all pages.
   @Override
@@ -136,8 +188,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       default:
         loadNavFragment(new HomeFragment());
     }
-
-    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawer.closeDrawer(GravityCompat.START);
     return true;
   }
