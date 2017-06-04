@@ -20,13 +20,14 @@ import butterknife.ButterKnife;
 
 public class RecipeListFragment extends Fragment {
   @Bind(R.id.recipe_list) RecyclerView mRecipeList;
-
+  private String searchInput;
   private RecipeListResponse recipeResponse;
 
-  public static RecipeListFragment newInstance(RecipeListResponse recipeResponse) {
+  public static RecipeListFragment newInstance(RecipeListResponse recipeResponse, String searchInput) {
     RecipeListFragment recipeListFragment = new RecipeListFragment();
     Bundle args = new Bundle();
     args.putParcelable("recipes", Parcels.wrap(recipeResponse));
+    args.putString("searchInput", searchInput);
     recipeListFragment.setArguments(args);
     return recipeListFragment;
   }
@@ -35,6 +36,7 @@ public class RecipeListFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     recipeResponse = Parcels.unwrap(getArguments().getParcelable("recipes"));
+    searchInput = getArguments().getString("searchInput");
   }
 
   @Nullable
@@ -53,7 +55,7 @@ public class RecipeListFragment extends Fragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    ((MainActivity)getActivity()).setToolbarTitle("Recipes");
+    ((MainActivity)getActivity()).setToolbarTitle(String.format("Results for %s", searchInput));
   }
 
 }

@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   }
 
 
-  public void runSearch(String search) {
+  public void runSearch(final String search) {
     loading.setMessage(String.format("Searching for %s recipes...", search));
     loading.show();
 
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Call<RecipeListResponse> call = spoonClient.searchRecipes(search);
     call.enqueue(new Callback<RecipeListResponse>() {
       @Override public void onResponse(Call<RecipeListResponse> call, retrofit2.Response<RecipeListResponse> response) {
-        loadNavFragment(RecipeListFragment.newInstance(response.body()));
+        loadNavFragment(RecipeListFragment.newInstance(response.body(), search));
         loading.dismiss();
       }
       @Override public void onFailure(Call<RecipeListResponse> call, Throwable t) {
