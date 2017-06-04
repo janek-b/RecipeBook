@@ -38,68 +38,7 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-
         </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
-
-        <!--<android.support.design.widget.CollapsingToolbarLayout-->
-            <!--android:id="@+id/collapsing_toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:contentScrim="?attr/colorPrimary"-->
-            <!--app:expandedTitleGravity="top"-->
-            <!--app:expandedTitleMarginEnd="48dp"-->
-            <!--app:expandedTitleMarginStart="48dp"-->
-            <!--app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/recipe_img_backdrop"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="300dp"-->
-                <!--android:fitsSystemWindows="true"-->
-                <!--android:foreground="#60000000"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--app:layout_collapseMode="parallax"-->
-                <!--app:srcCompat="@drawable/waffles"/>-->
-
-            <!--<android.support.v7.widget.Toolbar-->
-                <!--android:id="@+id/toolbar"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="?attr/actionBarSize"-->
-                <!--app:layout_collapseMode="pin"-->
-                <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>-->
-
-        <!--</android.support.design.widget.CollapsingToolbarLayout>-->
-
-        <!--<LinearLayout-->
-            <!--android:id="@+id/recipe_title_container"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical"-->
-            <!--android:paddingTop="8dp"-->
-            <!--app:layout_scrollFlags="scroll|enterAlways|snap"-->
-            <!--&gt;-->
-
-            <!--​<TextView-->
-                <!--android:id="@+id/recipe_title"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="left"-->
-                <!--android:text="Test Recipe title"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>-->
-            <!--​-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/recipe_cook_time"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="left"-->
-                <!--android:layout_marginBottom="4dp"-->
-                <!--android:layout_marginTop="4dp"-->
-                <!--android:text="Test cook time"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"-->
-                <!--android:textColor="@android:color/white"/>-->
-        <!--</LinearLayout>-->
 
     </android.support.design.widget.AppBarLayout>
 

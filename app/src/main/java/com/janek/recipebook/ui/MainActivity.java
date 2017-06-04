@@ -48,10 +48,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   @Bind(R.id.nav_view) NavigationView navigationView;
   @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
 
-//  @Bind(R.id.recipe_title_container) LinearLayout recipeTitleContainer;
-//  @Bind(R.id.recipe_title) TextView recipeTitleTextView;
-//  @Bind(R.id.recipe_cook_time) TextView recipeCookTimeTextView;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -147,11 +143,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   public void setBackdropImg(String url) {
     Picasso.with(this).load(url).resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(recipeImgBackdrop);
   }
-
-//  public void setRecipeTitle(String title, int cookTime) {
-//    recipeTitleTextView.setText(title);
-//    recipeCookTimeTextView.setText(String.format("Cook time: %d minutes", cookTime));
-//  }
 
 
   @Override
