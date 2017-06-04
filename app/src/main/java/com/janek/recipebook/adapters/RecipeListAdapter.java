@@ -1,6 +1,7 @@
 package com.janek.recipebook.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,6 +65,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
     }
 
     public void bindRecipeList(RecipeList recipeList) {
+      Typeface raleway = Typeface.createFromAsset(mContext.getAssets(), "fonts/raleway-regular.ttf");
+      title.setTypeface(raleway);
+      desc.setTypeface(raleway);
       title.setText(recipeList.getTitle());
       desc.setText(String.format("Cook Time: %d minutes", recipeList.getCookTime()));
       Picasso.with(mContext).load(String.format("%s%s", mImageBaseUrl, recipeList.getImage()))

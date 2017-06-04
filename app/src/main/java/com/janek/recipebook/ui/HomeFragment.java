@@ -36,7 +36,7 @@ public class HomeFragment extends Fragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    getActivity().setTitle("Recipe Book");
+    ((MainActivity)getActivity()).setToolbarTitle("Recipe Book");
     mSearchButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

@@ -36,7 +36,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Recipe Book"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:textStyle="bold"/>
+
+            </android.support.v7.widget.Toolbar>
 
         </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
 

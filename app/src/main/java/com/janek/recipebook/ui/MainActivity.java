@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   @Bind(R.id.drawer_layout) DrawerLayout drawer;
   @Bind(R.id.nav_view) NavigationView navigationView;
   @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+  @Bind(R.id.toolbarTitle) TextView toolbarTitle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +56,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ButterKnife.bind(this);
     Typeface raleway = Typeface.createFromAsset(getAssets(), "fonts/raleway-regular.ttf");
 
+    toolbarTitle.setTypeface(raleway);
     collapsingToolbar.setCollapsedTitleTypeface(raleway);
     collapsingToolbar.setExpandedTitleTypeface(raleway);
-//    collapsingToolbar.setExpandedTitleTextAppearance(R.style.TextAppearance_AppCompat_Title);
     loading = new ProgressDialog(MainActivity.this);
     loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     loading.setIndeterminate(true);
@@ -129,12 +130,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
   public void disableCollapse() {
     recipeImgBackdrop.setVisibility(View.GONE);
+    toolbarTitle.setVisibility(View.VISIBLE);
 //    recipeTitleContainer.setVisibility(View.GONE);
     collapsingToolbar.setTitleEnabled(false);
   }
 
   public void enableCollapse() {
     recipeImgBackdrop.setVisibility(View.VISIBLE);
+    toolbarTitle.setVisibility(View.GONE);
 //    recipeTitleContainer.setVisibility(View.VISIBLE);
     collapsingToolbar.setTitleEnabled(true);
   }
@@ -148,10 +151,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     collapsingToolbar.setTitle(title);
   }
 
+  public void setToolbarTitle(String title) {
+    setTitle("");
+    toolbarTitle.setText(title);
+  }
+
 
   @Override
   public void onBackPressed() {
-//    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     if (drawer.isDrawerOpen(GravityCompat.START)) {
       drawer.closeDrawer(GravityCompat.START);
     } else {
