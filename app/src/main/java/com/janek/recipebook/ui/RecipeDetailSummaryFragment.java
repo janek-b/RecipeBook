@@ -54,7 +54,7 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
+    View view = inflater.inflate(R.layout.fragment_recipe_detail_summary, container, false);
     ButterKnife.bind(this, view);
     Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
     cookTimeTextView.setTypeface(raleway);

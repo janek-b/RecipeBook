@@ -39,7 +39,7 @@ public class RecipeDetailFragment extends Fragment {
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.recipe_detail, container, false);
+    View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
     ButterKnife.bind(this, view);
     RestaurantDetailPagerAdapter adapter = new RestaurantDetailPagerAdapter(getActivity().getSupportFragmentManager());
     adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe), "Summary");

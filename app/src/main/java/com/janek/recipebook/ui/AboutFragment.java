@@ -21,7 +21,7 @@ public class AboutFragment extends Fragment {
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.about, container, false);
+    View view = inflater.inflate(R.layout.fragment_about, container, false);
     ButterKnife.bind(this, view);
     Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
     mTitle.setTypeface(raleway);
