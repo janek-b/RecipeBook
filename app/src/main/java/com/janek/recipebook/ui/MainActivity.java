@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.main, menu);
     final MenuItem menuItem = menu.findItem(R.id.action_search);
-    
+
     SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override public boolean onQueryTextSubmit(String query) {
