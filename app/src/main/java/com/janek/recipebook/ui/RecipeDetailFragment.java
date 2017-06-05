@@ -35,7 +35,6 @@ public class RecipeDetailFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     recipe = Parcels.unwrap(getArguments().getParcelable("recipe"));
-    Log.d("test", recipe.getFullInstructions().toString());
   }
 
   @Nullable
@@ -43,10 +42,9 @@ public class RecipeDetailFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
     ButterKnife.bind(this, view);
-    RestaurantDetailPagerAdapter adapter = new RestaurantDetailPagerAdapter(getActivity().getSupportFragmentManager());
+    RestaurantDetailPagerAdapter adapter = new RestaurantDetailPagerAdapter(getChildFragmentManager());
     adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe), "Summary");
     adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe), "Instructions");
-
     viewPager.setAdapter(adapter);
     ((MainActivity)getActivity()).setTabLayout(viewPager);
     return view;

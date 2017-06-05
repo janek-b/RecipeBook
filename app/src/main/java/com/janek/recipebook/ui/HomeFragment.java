@@ -49,14 +49,5 @@ public class HomeFragment extends Fragment {
         }
       }
     });
-//    mSearchButton.setOnClickListener((View v) -> {
-//      String searchInput = mSearchField.getText().toString();
-//      if (searchInput.equals("")) {
-//        Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
-//      } else {
-//        mSearchField.setText("");
-//        ((MainActivity)getActivity()).runSearch(searchInput);
-//      }
-//    });
   }
 }

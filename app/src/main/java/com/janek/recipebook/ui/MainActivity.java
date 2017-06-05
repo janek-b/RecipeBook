@@ -35,21 +35,18 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
   private static final String BACK_STACK_ROOT_TAG = "root_fragment";
   private static final int MAX_WIDTH = 400;
   private static final int MAX_HEIGHT = 300;
   private ProgressDialog loading;
+
+  private final CompositeDisposable disposable = new CompositeDisposable();
 
   @Bind(R.id.recipe_img_backdrop) ImageView recipeImgBackdrop;
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -98,79 +95,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
       }
     });
-//    getSupportFragmentManager().addOnBackStackChangedListener(() -> {
-//      Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-//      if (fragment instanceof HomeFragment) {
-//        disableCollapse();
-//        navigationView.setCheckedItem(R.id.nav_home);
-//      } else if (fragment instanceof AboutFragment) {
-//        disableCollapse();
-//        navigationView.setCheckedItem(R.id.nav_about);
-//      } else if (fragment instanceof RecipeDetailFragment) {
-//        enableCollapse();
-//      } else {
-//        disableCollapse();
-//      }
-//    });
-    // Initialize with HomeFragment fragment
     getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    disposable.clear();
   }
 
 
   public void runSearch(final String search) {
     loading.setMessage(String.format("Searching for %s recipes...", search));
     loading.show();
-
     SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-    Call<RecipeListResponse> call = spoonClient.searchRecipes(search);
-    call.enqueue(new Callback<RecipeListResponse>() {
-      @Override public void onResponse(Call<RecipeListResponse> call, retrofit2.Response<RecipeListResponse> response) {
-        loadNavFragment(RecipeListFragment.newInstance(response.body(), search));
+    disposable.add(spoonClient.searchRecipes(search).subscribeWith(new DisposableObserver<RecipeListResponse>() {
+      @Override public void onNext(@NonNull RecipeListResponse recipeListResponse) {
+        loadNavFragment(RecipeListFragment.newInstance(recipeListResponse, search));
         loading.dismiss();
       }
-      @Override public void onFailure(Call<RecipeListResponse> call, Throwable t) {
-        t.printStackTrace();
-        //TODO show error message
-      }
-    });
+      @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
+      @Override public void onComplete() {}
+    }));
   }
 
   public void getRecipe(int id) {
     loading.setMessage("Getting recipe Details...");
     loading.show();
-
     SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-    Call<Recipe> call = spoonClient.getRecipe(id);
-    call.enqueue(new Callback<Recipe>() {
-      @Override
-      public void onResponse(Call<Recipe> call, retrofit2.Response<Recipe> response) {
-        loadFragment(RecipeDetailFragment.newInstance(response.body()));
-        loading.dismiss();
-      }
-      @Override public void onFailure(Call<Recipe> call, Throwable t) {t.printStackTrace();}
-    });
-  }
-
-  public void getFullRecipe(int id) {
-    loading.setMessage("Getting recipe Details...");
-    loading.show();
-    SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-
-    Observable.combineLatest(spoonClient.getObsRecipe(id), spoonClient.getObsInstructions(id), new BiFunction<Recipe, List<Instruction>, Recipe>() {
+    disposable.add(Observable.combineLatest(spoonClient.getRecipe(id), spoonClient.getInstructions(id), new BiFunction<Recipe, List<Instruction>, Recipe>() {
       @Override public Recipe apply(@NonNull Recipe recipe, @NonNull List<Instruction> instructions) throws Exception {
         recipe.setFullInstructions(instructions);
         return recipe;
       }
-    }).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeWith(new DisposableObserver<Recipe>() {
-          @Override public void onNext(@NonNull Recipe recipe) {
-            loadFragment(RecipeDetailFragment.newInstance(recipe));
-            loading.dismiss();
-          }
-          @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
-          @Override public void onComplete() {}
-        });
+    }).subscribeWith(new DisposableObserver<Recipe>() {
+      @Override public void onNext(@NonNull Recipe recipe) {
+        loadFragment(RecipeDetailFragment.newInstance(recipe));
+        loading.dismiss();
+      }
+      @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
+      @Override public void onComplete() {}
+    }));
   }
 
 
