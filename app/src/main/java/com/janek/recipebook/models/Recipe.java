@@ -22,10 +22,15 @@ public class Recipe {
   int cookTime;
   String image;
   String instructions;
+  List<Instruction> fullInstructions;
+
+  public void setFullInstructions(List<Instruction> fullInstructions) {
+    this.fullInstructions = fullInstructions;
+  }
 
   public Recipe() {}
 
-  public Recipe(boolean vegetarian, boolean vegan, boolean glutenFree, boolean dairyFree, int servings, String sourceUrl, List<Ingredient> ingredients, int id, String title, int cookTime, String image, String instructions) {
+  public Recipe(boolean vegetarian, boolean vegan, boolean glutenFree, boolean dairyFree, int servings, String sourceUrl, List<Ingredient> ingredients, int id, String title, int cookTime, String image, String instructions, List<Instruction> fullInstructions) {
     this.vegetarian = vegetarian;
     this.vegan = vegan;
     this.glutenFree = glutenFree;
@@ -38,6 +43,7 @@ public class Recipe {
     this.cookTime = cookTime;
     this.image = image;
     this.instructions = instructions;
+    this.fullInstructions = fullInstructions;
   }
 
   public boolean isVegetarian() {
@@ -87,4 +93,6 @@ public class Recipe {
   public String getInstructions() {
     return instructions;
   }
+
+  public List<Instruction> getFullInstructions() { return fullInstructions; }
 }

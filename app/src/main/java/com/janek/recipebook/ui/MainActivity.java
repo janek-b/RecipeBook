@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.janek.recipebook.R;
+import com.janek.recipebook.models.Instruction;
 import com.janek.recipebook.models.Recipe;
 import com.janek.recipebook.models.RecipeListResponse;
 import com.janek.recipebook.services.SpoonClient;
@@ -29,8 +30,18 @@ import com.squareup.picasso.Picasso;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -70,20 +81,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     disableCollapse();
 
     // Listen for fragment changes and update selected nav item
-    getSupportFragmentManager().addOnBackStackChangedListener(() -> {
-      Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-      if (fragment instanceof HomeFragment) {
-        disableCollapse();
-        navigationView.setCheckedItem(R.id.nav_home);
-      } else if (fragment instanceof AboutFragment) {
-        disableCollapse();
-        navigationView.setCheckedItem(R.id.nav_about);
-      } else if (fragment instanceof RecipeDetailFragment) {
-        enableCollapse();
-      } else {
-        disableCollapse();
+    getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+      @Override
+      public void onBackStackChanged() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if (fragment instanceof HomeFragment) {
+          disableCollapse();
+          navigationView.setCheckedItem(R.id.nav_home);
+        } else if (fragment instanceof AboutFragment) {
+          disableCollapse();
+          navigationView.setCheckedItem(R.id.nav_about);
+        } else if (fragment instanceof RecipeDetailFragment) {
+          enableCollapse();
+        } else {
+          disableCollapse();
+        }
       }
     });
+//    getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+//      Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+//      if (fragment instanceof HomeFragment) {
+//        disableCollapse();
+//        navigationView.setCheckedItem(R.id.nav_home);
+//      } else if (fragment instanceof AboutFragment) {
+//        disableCollapse();
+//        navigationView.setCheckedItem(R.id.nav_about);
+//      } else if (fragment instanceof RecipeDetailFragment) {
+//        enableCollapse();
+//      } else {
+//        disableCollapse();
+//      }
+//    });
     // Initialize with HomeFragment fragment
     getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
   }
@@ -121,6 +149,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       }
       @Override public void onFailure(Call<Recipe> call, Throwable t) {t.printStackTrace();}
     });
+  }
+
+  public void getFullRecipe(int id) {
+    loading.setMessage("Getting recipe Details...");
+    loading.show();
+    SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
+
+    Observable.combineLatest(spoonClient.getObsRecipe(id), spoonClient.getObsInstructions(id), new BiFunction<Recipe, List<Instruction>, Recipe>() {
+      @Override public Recipe apply(@NonNull Recipe recipe, @NonNull List<Instruction> instructions) throws Exception {
+        recipe.setFullInstructions(instructions);
+        return recipe;
+      }
+    }).subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeWith(new DisposableObserver<Recipe>() {
+          @Override public void onNext(@NonNull Recipe recipe) {
+            loadFragment(RecipeDetailFragment.newInstance(recipe));
+            loading.dismiss();
+          }
+          @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
+          @Override public void onComplete() {}
+        });
   }
 
 

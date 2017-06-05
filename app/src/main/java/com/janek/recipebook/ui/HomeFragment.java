@@ -37,14 +37,26 @@ public class HomeFragment extends Fragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     ((MainActivity)getActivity()).setToolbarTitle("Recipe Book");
-    mSearchButton.setOnClickListener((View v) -> {
-      String searchInput = mSearchField.getText().toString();
-      if (searchInput.equals("")) {
-        Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
-      } else {
-        mSearchField.setText("");
-        ((MainActivity)getActivity()).runSearch(searchInput);
+    mSearchButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        String searchInput = mSearchField.getText().toString();
+        if (searchInput.equals("")) {
+          Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
+        } else {
+          mSearchField.setText("");
+          ((MainActivity)getActivity()).runSearch(searchInput);
+        }
       }
     });
+//    mSearchButton.setOnClickListener((View v) -> {
+//      String searchInput = mSearchField.getText().toString();
+//      if (searchInput.equals("")) {
+//        Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
+//      } else {
+//        mSearchField.setText("");
+//        ((MainActivity)getActivity()).runSearch(searchInput);
+//      }
+//    });
   }
 }
