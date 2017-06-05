@@ -44,7 +44,7 @@ public class RecipeDetailFragment extends Fragment {
     ButterKnife.bind(this, view);
     RestaurantDetailPagerAdapter adapter = new RestaurantDetailPagerAdapter(getChildFragmentManager());
     adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe), "Summary");
-    adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe), "Instructions");
+    adapter.addFragment(InstructionsFragment.newInstance(recipe), "Instructions");
     viewPager.setAdapter(adapter);
     ((MainActivity)getActivity()).setTabLayout(viewPager);
     return view;

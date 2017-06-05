@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.Instruction;
@@ -12,6 +13,7 @@ import com.janek.recipebook.models.Step;
 
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapter.InstructionsViewHolder> {
@@ -39,6 +41,8 @@ public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapte
   }
 
   public class InstructionsViewHolder extends RecyclerView.ViewHolder {
+    @Bind(R.id.step_number) TextView stepNumberTextView;
+    @Bind(R.id.step_desc) TextView stepDescTextView;
 
     private Context mContext;
 
@@ -49,7 +53,8 @@ public class InstructionsAdapter extends RecyclerView.Adapter<InstructionsAdapte
     }
 
     public void bindInstructions(Step step) {
-
+      stepNumberTextView.setText(String.format("%d", step.getNumber()));
+      stepDescTextView.setText(step.getStep());
     }
   }
 }
