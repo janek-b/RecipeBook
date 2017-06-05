@@ -9,11 +9,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -185,17 +188,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.main, menu);
+    final MenuItem menuItem = menu.findItem(R.id.action_search);
+    
+    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override public boolean onQueryTextSubmit(String query) {
+        runSearch(query);
+        MenuItemCompat.collapseActionView(menuItem);
+        return false;
+      }
+      @Override public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    });
     return true;
   }
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-    if (id == R.id.action_settings) {
-      return true;
-    }
     return super.onOptionsItemSelected(item);
   }
-
 
 
   public void loadNavFragment(Fragment fragment) {
