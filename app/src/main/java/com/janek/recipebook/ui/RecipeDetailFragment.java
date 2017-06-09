@@ -5,12 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.janek.recipebook.R;
-import com.janek.recipebook.adapters.RestaurantDetailPagerAdapter;
+import com.janek.recipebook.adapters.RecipeDetailPagerAdapter;
 import com.janek.recipebook.models.Recipe;
 import org.parceler.Parcels;
 
@@ -47,7 +46,7 @@ public class RecipeDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
-        RestaurantDetailPagerAdapter adapter = new RestaurantDetailPagerAdapter(getChildFragmentManager());
+        RecipeDetailPagerAdapter adapter = new RecipeDetailPagerAdapter(getChildFragmentManager());
         adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe, userSaved), "Summary");
         adapter.addFragment(InstructionsFragment.newInstance(recipe), "Instructions");
         viewPager.setAdapter(adapter);

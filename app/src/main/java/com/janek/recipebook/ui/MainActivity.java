@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (currentUser != null) {
                     // update nav header
                     userProfileName.setText(currentUser.getDisplayName());
-                    Picasso.with(MainActivity.this).load(currentUser.getPhotoUrl()).resize(50, 50).centerCrop().into(userProfileImg);
+                    Picasso.with(MainActivity.this).load(currentUser.getPhotoUrl()).resize(100, 100).centerCrop().into(userProfileImg);
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
                 } else {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -295,6 +295,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.nav_home:
                 loadNavFragment(new HomeFragment());
+                break;
+            case R.id.nav_saved_recipes:
+                loadFragment(new SavedRecipeListFragment());
                 break;
             case R.id.nav_about:
                 loadNavFragment(new AboutFragment());

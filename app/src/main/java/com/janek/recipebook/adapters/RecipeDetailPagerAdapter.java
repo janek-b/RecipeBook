@@ -9,12 +9,12 @@ import java.util.List;
 
 
 
-public class RestaurantDetailPagerAdapter extends FragmentPagerAdapter {
+public class RecipeDetailPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> mFragments = new ArrayList<>();
     private List<String> mFragmentsTitles = new ArrayList<>();
 
 
-    public RestaurantDetailPagerAdapter(FragmentManager fm) {
+    public RecipeDetailPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
