@@ -7,7 +7,11 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -29,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressDialog mAuthProgressDialog;
 
     @Override
@@ -40,6 +45,15 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         createAuthProgressDialog();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override public void onAuthStateChanged(@android.support.annotation.NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        };
 
         Observable<CharSequence> emailObservable = RxTextView.textChanges(emailEditText).skipInitialValue();
         Observable<CharSequence> passwordObservable = RxTextView.textChanges(passwordEditText).skipInitialValue();
@@ -63,7 +77,17 @@ public class LoginActivity extends AppCompatActivity {
 
         disposable.add(RxView.clicks(loginButton).subscribe(new Consumer<Object>() {
             @Override public void accept(@NonNull Object o) throws Exception {
-                // login and move to main activity
+                String email = emailEditText.getText().toString().trim();
+                String password = passwordEditText.getText().toString().trim();
+                mAuthProgressDialog.show();
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
+                        mAuthProgressDialog.dismiss();
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Something went wrong, Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }));
 
@@ -72,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                finish();
             }
         }));
     }
@@ -80,6 +105,20 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         disposable.clear();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     public void createAuthProgressDialog() {
