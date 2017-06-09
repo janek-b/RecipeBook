@@ -1,7 +1,9 @@
 package com.janek.recipebook.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,9 +12,17 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
 
 import java.util.concurrent.TimeUnit;
@@ -37,12 +47,19 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
+    private FirebaseAuth mAuth;
+    private ProgressDialog mAuthProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
         ButterKnife.bind(this);
         signUpButton.setEnabled(false);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        createAuthProgressDialog();
 
         Observable<CharSequence> nameObservable = RxTextView.textChanges(nameEditText).skipInitialValue();
         Observable<CharSequence> emailObservable = RxTextView.textChanges(emailEditText).skipInitialValue();
@@ -66,14 +83,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         disposable.add(RxView.clicks(signUpButton).subscribe(new Consumer<Object>() {
             @Override public void accept(@NonNull Object o) throws Exception {
-                Log.d("signUp", o.toString());
-                // show progress
-
-                // create user
-
-                // update profile
-
-                // load main activity
+                createNewUser();
             }
         }));
 
@@ -90,6 +100,12 @@ public class CreateAccountActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         disposable.clear();
+    }
+
+    public void createAuthProgressDialog() {
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setMessage("Creating new account...");
+        mAuthProgressDialog.setCancelable(false);
     }
 
     private boolean isValidEmail(String email) {
@@ -113,6 +129,42 @@ public class CreateAccountActivity extends AppCompatActivity {
             return false;
         } else passwordEditText.setError(null);
         return true;
+    }
+
+    private void createNewUser() {
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+        mAuthProgressDialog.show();
+
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    updateUserProfile(task.getResult().getUser());
+                } else {
+                    Toast.makeText(CreateAccountActivity.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void updateUserProfile(final FirebaseUser user) {
+        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                .setDisplayName(nameEditText.getText().toString().trim())
+                .setPhotoUri(Uri.parse(Constants.DEFAULT_IMG_URL))
+                .build();
+
+        user.updateProfile(profileUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override public void onComplete(@android.support.annotation.NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    mAuthProgressDialog.dismiss();
+                    Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
     }
 
 }

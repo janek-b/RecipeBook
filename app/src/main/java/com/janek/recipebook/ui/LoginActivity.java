@@ -1,5 +1,6 @@
 package com.janek.recipebook.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.janek.recipebook.R;
@@ -26,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.createAccountButton) Button createAccountButton;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private FirebaseAuth mAuth;
+    private ProgressDialog mAuthProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         loginButton.setEnabled(false);
+
+        mAuth = FirebaseAuth.getInstance();
+        createAuthProgressDialog();
 
         Observable<CharSequence> emailObservable = RxTextView.textChanges(emailEditText).skipInitialValue();
         Observable<CharSequence> passwordObservable = RxTextView.textChanges(passwordEditText).skipInitialValue();
@@ -73,5 +80,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         disposable.clear();
+    }
+
+    public void createAuthProgressDialog() {
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setMessage("Logging in...");
+        mAuthProgressDialog.setCancelable(false);
     }
 }
