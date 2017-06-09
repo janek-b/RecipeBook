@@ -17,29 +17,30 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class AboutFragment extends Fragment {
-  @BindView(R.id.about_title) TextView mTitle;
-  @BindView(R.id.about_link) TextView mLink;
-  private Unbinder unbinder;
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_about, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
-    mTitle.setTypeface(raleway);
-    mLink.setMovementMethod(LinkMovementMethod.getInstance());
-    return view;
-  }
+    @BindView(R.id.about_title) TextView mTitle;
+    @BindView(R.id.about_link) TextView mLink;
+    private Unbinder unbinder;
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_about, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
+        mTitle.setTypeface(raleway);
+        mLink.setMovementMethod(LinkMovementMethod.getInstance());
+        return view;
+    }
 
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
-  }
 
-  @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    ((MainActivity)getActivity()).setToolbarTitle("About");
-  }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ((MainActivity)getActivity()).setToolbarTitle("About");
+    }
 }

@@ -8,32 +8,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class RestaurantDetailPagerAdapter extends FragmentPagerAdapter {
-  private List<Fragment> mFragments = new ArrayList<>();
-  private List<String> mFragmentsTitles = new ArrayList<>();
+    private List<Fragment> mFragments = new ArrayList<>();
+    private List<String> mFragmentsTitles = new ArrayList<>();
 
 
-  public RestaurantDetailPagerAdapter(FragmentManager fm) {
-    super(fm);
-  }
+    public RestaurantDetailPagerAdapter(FragmentManager fm) {
+        super(fm);
+    }
 
-  public void addFragment(Fragment fragment, String title) {
-    mFragments.add(fragment);
-    mFragmentsTitles.add(title);
-  }
+    public void addFragment(Fragment fragment, String title) {
+        mFragments.add(fragment);
+        mFragmentsTitles.add(title);
+    }
 
-  @Override
-  public Fragment getItem(int position) {
-    return mFragments.get(position);
-  }
+    @Override
+    public Fragment getItem(int position) {
+        return mFragments.get(position);
+    }
 
-  @Override
-  public int getCount() {
-    return mFragments.size();
-  }
+    @Override
+    public int getCount() {
+        return mFragments.size();
+    }
 
-  @Override
-  public CharSequence getPageTitle(int position) {
-    return mFragmentsTitles.get(position);
-  }
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return mFragmentsTitles.get(position);
+    }
 }

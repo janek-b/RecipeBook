@@ -26,84 +26,85 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class RecipeDetailSummaryFragment extends Fragment implements View.OnClickListener {
-  @BindView(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
-  @BindView(R.id.recipe_detail_servings) TextView servingsTextView;
-  @BindView(R.id.ingredients_label) TextView ingredientsLabel;
-  @BindView(R.id.websiteTextView) TextView websiteTextView;
-  @BindView(R.id.dairyFreeIcon) ImageView dairyFreeIcon;
-  @BindView(R.id.glutenFreeIcon) ImageView glutenFreeIcon;
-  @BindView(R.id.veganIcon) ImageView veganIcon;
-  @BindView(R.id.vegetarianIcon) ImageView vegetarianIcon;
-  @BindView(R.id.ingredient_list_layout) LinearLayout ingredientListLayout;
-  private Unbinder unbinder;
-  private Recipe recipe;
+    @BindView(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
+    @BindView(R.id.recipe_detail_servings) TextView servingsTextView;
+    @BindView(R.id.ingredients_label) TextView ingredientsLabel;
+    @BindView(R.id.websiteTextView) TextView websiteTextView;
+    @BindView(R.id.dairyFreeIcon) ImageView dairyFreeIcon;
+    @BindView(R.id.glutenFreeIcon) ImageView glutenFreeIcon;
+    @BindView(R.id.veganIcon) ImageView veganIcon;
+    @BindView(R.id.vegetarianIcon) ImageView vegetarianIcon;
+    @BindView(R.id.ingredient_list_layout) LinearLayout ingredientListLayout;
+    private Unbinder unbinder;
+    private Recipe recipe;
 
-  public static RecipeDetailSummaryFragment newInstance(Recipe recipe) {
-    RecipeDetailSummaryFragment recipeDetailSummaryFragment = new RecipeDetailSummaryFragment();
-    Bundle args = new Bundle();
-    args.putParcelable("recipe", Parcels.wrap(recipe));
-    recipeDetailSummaryFragment.setArguments(args);
-    return recipeDetailSummaryFragment;
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    recipe = Parcels.unwrap(getArguments().getParcelable("recipe"));
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_recipe_detail_summary, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
-    cookTimeTextView.setTypeface(raleway);
-    servingsTextView.setTypeface(raleway);
-    ingredientsLabel.setTypeface(raleway);
-    websiteTextView.setTypeface(raleway);
-    setVisibility(dairyFreeIcon, recipe.isDairyFree());
-    setVisibility(glutenFreeIcon, recipe.isGlutenFree());
-    setVisibility(veganIcon, recipe.isVegan());
-    setVisibility(vegetarianIcon, recipe.isVegetarian());
-
-    websiteTextView.setOnClickListener(this);
-    return view;
-  }
-
-  @Override
-  public void onDestroyView() {
-    super.onDestroyView();
-    unbinder.unbind();
-  }
-
-  @Override
-  public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    cookTimeTextView.setText(String.format("Cook Time: %d minutes", recipe.getCookTime()));
-    servingsTextView.setText(String.format("Servings: %d", recipe.getServings()));
-    for (Ingredient ingredient : recipe.getIngredients()) {
-      TextView ingredientView = new TextView(getContext());
-      ingredientView.setText(ingredient.getOriginalString());
-      ingredientView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextIcons));
-      ingredientView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-      ingredientListLayout.addView(ingredientView);
+    public static RecipeDetailSummaryFragment newInstance(Recipe recipe) {
+        RecipeDetailSummaryFragment recipeDetailSummaryFragment = new RecipeDetailSummaryFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("recipe", Parcels.wrap(recipe));
+        recipeDetailSummaryFragment.setArguments(args);
+        return recipeDetailSummaryFragment;
     }
-  }
 
-  public void setVisibility(ImageView icon, boolean visible) {
-    if (visible) {
-      icon.setVisibility(View.VISIBLE);
-    } else {
-      icon.setVisibility(View.GONE);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        recipe = Parcels.unwrap(getArguments().getParcelable("recipe"));
     }
-  }
 
-  @Override
-  public void onClick(View v) {
-    if (v == websiteTextView) {
-      Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(recipe.getSourceUrl()));
-      startActivity(webIntent);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_recipe_detail_summary, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
+        cookTimeTextView.setTypeface(raleway);
+        servingsTextView.setTypeface(raleway);
+        ingredientsLabel.setTypeface(raleway);
+        websiteTextView.setTypeface(raleway);
+        setVisibility(dairyFreeIcon, recipe.isDairyFree());
+        setVisibility(glutenFreeIcon, recipe.isGlutenFree());
+        setVisibility(veganIcon, recipe.isVegan());
+        setVisibility(vegetarianIcon, recipe.isVegetarian());
+
+        websiteTextView.setOnClickListener(this);
+        return view;
     }
-  }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        cookTimeTextView.setText(String.format("Cook Time: %d minutes", recipe.getCookTime()));
+        servingsTextView.setText(String.format("Servings: %d", recipe.getServings()));
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            TextView ingredientView = new TextView(getContext());
+            ingredientView.setText(ingredient.getOriginalString());
+            ingredientView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorTextIcons));
+            ingredientView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            ingredientListLayout.addView(ingredientView);
+        }
+    }
+
+    public void setVisibility(ImageView icon, boolean visible) {
+        if (visible) {
+            icon.setVisibility(View.VISIBLE);
+        } else {
+            icon.setVisibility(View.GONE);
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        if (v == websiteTextView) {
+            Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(recipe.getSourceUrl()));
+            startActivity(webIntent);
+        }
+    }
 }

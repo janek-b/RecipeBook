@@ -21,87 +21,88 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class InstructionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-  private List<Object> steps;
+    private List<Object> steps;
 
-  public InstructionsAdapter(List<Object> instruction) {
-    steps = instruction;
-  }
-
-  @Override
-  public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    switch (viewType) {
-      case 1: return new InstructionTitleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.instruction_header, parent, false));
-      default: return new InstructionsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.instruction_step, parent, false));
-    }
-  }
-
-  @Override
-  public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-    switch (holder.getItemViewType()) {
-      case 0:
-        InstructionsViewHolder stepViewHolder = (InstructionsViewHolder) holder;
-        stepViewHolder.bindInstructions((Step)steps.get(position));
-        break;
-      case 1:
-        InstructionTitleViewHolder titleViewHolder = (InstructionTitleViewHolder) holder;
-        titleViewHolder.bindTitle((String)steps.get(position));
-        break;
-    }
-  }
-
-  @Override
-  public int getItemViewType(int position) {
-    return steps.get(position) instanceof String ? 1 : 0;
-  }
-
-  @Override
-  public int getItemCount() {
-    return steps.size();
-  }
-
-  public class InstructionsViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.step_number) TextView stepNumberTextView;
-    @BindView(R.id.step_desc) TextView stepDescTextView;
-    @BindView(R.id.ingredients_instructions_label) TextView ingredientLabel;
-    @BindView(R.id.step_layout) LinearLayout stepLayout;
-
-    private Context mContext;
-
-    public InstructionsViewHolder(View itemView) {
-      super(itemView);
-      ButterKnife.bind(this, itemView);
-      mContext = itemView.getContext();
+    public InstructionsAdapter(List<Object> instruction) {
+        steps = instruction;
     }
 
-    public void bindInstructions(Step step) {
-      stepNumberTextView.setText(String.format("%d", step.getNumber()));
-      stepDescTextView.setText(step.getStep());
 
-      if (step.getIngredients().size() > 0) ingredientLabel.setVisibility(View.VISIBLE);
-      else ingredientLabel.setVisibility(View.GONE);
-
-      for (Item ingredient : step.getIngredients()) {
-        TextView ingredientView = new TextView(mContext);
-        ingredientView.setText(ingredient.getName());
-        ingredientView.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextIcons));
-        stepLayout.addView(ingredientView);
-      }
-    }
-  }
-
-  public class InstructionTitleViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.instruction_title) TextView instructionTitleTextView;
-
-    private Context mContext;
-
-    public InstructionTitleViewHolder(View itemView) {
-      super(itemView);
-      ButterKnife.bind(this, itemView);
-      mContext = itemView.getContext();
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case 1: return new InstructionTitleViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.instruction_header, parent, false));
+            default: return new InstructionsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.instruction_step, parent, false));
+        }
     }
 
-    public void bindTitle(String title) {
-      instructionTitleTextView.setText(title);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case 0:
+                InstructionsViewHolder stepViewHolder = (InstructionsViewHolder) holder;
+                stepViewHolder.bindInstructions((Step)steps.get(position));
+                break;
+            case 1:
+                InstructionTitleViewHolder titleViewHolder = (InstructionTitleViewHolder) holder;
+                titleViewHolder.bindTitle((String)steps.get(position));
+                break;
+        }
     }
-  }
+
+    @Override
+    public int getItemViewType(int position) {
+        return steps.get(position) instanceof String ? 1 : 0;
+    }
+
+    @Override
+    public int getItemCount() {
+        return steps.size();
+    }
+
+    public class InstructionsViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.step_number) TextView stepNumberTextView;
+        @BindView(R.id.step_desc) TextView stepDescTextView;
+        @BindView(R.id.ingredients_instructions_label) TextView ingredientLabel;
+        @BindView(R.id.step_layout) LinearLayout stepLayout;
+
+        private Context mContext;
+
+        public InstructionsViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            mContext = itemView.getContext();
+        }
+
+        public void bindInstructions(Step step) {
+            stepNumberTextView.setText(String.format("%d", step.getNumber()));
+            stepDescTextView.setText(step.getStep());
+
+            if (step.getIngredients().size() > 0) ingredientLabel.setVisibility(View.VISIBLE);
+            else ingredientLabel.setVisibility(View.GONE);
+
+            for (Item ingredient : step.getIngredients()) {
+                TextView ingredientView = new TextView(mContext);
+                ingredientView.setText(ingredient.getName());
+                ingredientView.setTextColor(ContextCompat.getColor(mContext, R.color.colorTextIcons));
+                stepLayout.addView(ingredientView);
+            }
+        }
+    }
+
+    public class InstructionTitleViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.instruction_title) TextView instructionTitleTextView;
+
+        private Context mContext;
+
+        public InstructionTitleViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            mContext = itemView.getContext();
+        }
+
+        public void bindTitle(String title) {
+            instructionTitleTextView.setText(title);
+        }
+    }
 }

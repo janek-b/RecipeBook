@@ -15,14 +15,14 @@ import retrofit2.http.Query;
 
 
 public interface SpoonClient {
-  @GET("/recipes/search?instructionsRequired=true")
-  Observable<RecipeListResponse> searchRecipes(@Query("query") String query);
+    @GET("/recipes/search?instructionsRequired=true")
+    Observable<RecipeListResponse> searchRecipes(@Query("query") String query);
 
-  @GET("/recipes/{recipeId}/information?includeNutrition=false")
-  Observable<Recipe> getRecipe(@Path("recipeId") int recipeId);
+    @GET("/recipes/{recipeId}/information?includeNutrition=false")
+    Observable<Recipe> getRecipe(@Path("recipeId") int recipeId);
 
-  @GET("/recipes/{recipeId}/analyzedInstructions?stepBreakdown=true")
-  Observable<List<Instruction>> getInstructions(@Path("recipeId") int recipeId);
+    @GET("/recipes/{recipeId}/analyzedInstructions?stepBreakdown=true")
+    Observable<List<Instruction>> getInstructions(@Path("recipeId") int recipeId);
 
-  //TODO add random joke api call
+    //TODO add random joke api call
 }

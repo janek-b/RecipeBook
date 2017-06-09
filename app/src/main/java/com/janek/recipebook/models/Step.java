@@ -6,33 +6,34 @@ import java.util.List;
 
 @Parcel
 public class Step {
-  int number;
-  String step;
-  List<Item> ingredients;
-  List<Item> equipment;
+    int number;
+    String step;
+    List<Item> ingredients;
+    List<Item> equipment;
 
-  public Step() {}
 
-  public Step(int number, String step, List<Item> ingredients, List<Item> equipment) {
-    this.number = number;
-    this.step = step;
-    this.ingredients = ingredients;
-    this.equipment = equipment;
-  }
+    public Step() {}
 
-  public int getNumber() {
-    return number;
-  }
+    public Step(int number, String step, List<Item> ingredients, List<Item> equipment) {
+        this.number = number;
+        this.step = step;
+        this.ingredients = ingredients;
+        this.equipment = equipment;
+    }
 
-  public String getStep() {
-    return step;
-  }
+    public int getNumber() {
+        return number;
+    }
 
-  public List<Item> getIngredients() {
-    return ingredients;
-  }
+    public String getStep() {
+        return step;
+    }
 
-  public List<Item> getEquipment() {
-    return equipment;
-  }
+    public List<Item> getIngredients() {
+        return ingredients;
+    }
+
+    public List<Item> getEquipment() {
+        return equipment;
+    }
 }

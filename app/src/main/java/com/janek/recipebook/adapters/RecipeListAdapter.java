@@ -21,62 +21,63 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
+
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeListViewHolder> {
-  private List<RecipeList> mRecipes;
-  private String mImageBaseUrl;
+    private List<RecipeList> mRecipes;
+    private String mImageBaseUrl;
 
-  public RecipeListAdapter(RecipeListResponse recipeResponse) {
-    this.mRecipes = recipeResponse.getResults();
-    this.mImageBaseUrl = recipeResponse.getBaseUri();
-  }
-
-  @Override
-  public RecipeListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_item, parent, false);
-    RecipeListViewHolder viewHolder = new RecipeListViewHolder(view);
-    return viewHolder;
-  }
-
-  @Override
-  public void onBindViewHolder(RecipeListViewHolder holder, final int position) {
-    holder.bindRecipeList(mRecipes.get(position));
-  }
-
-  @Override
-  public int getItemCount() {
-    return mRecipes.size();
-  }
-
-  public class RecipeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private static final int MAX_WIDTH = 400;
-    private static final int MAX_HEIGHT = 300;
-    @BindView(R.id.recipe_title) TextView title;
-    @BindView(R.id.recipe_desc) TextView desc;
-    @BindView(R.id.recipe_img) ImageView img;
-
-    private Context mContext;
-
-    public RecipeListViewHolder(View itemView) {
-      super(itemView);
-      ButterKnife.bind(this, itemView);
-      mContext = itemView.getContext();
-      itemView.setOnClickListener(this);
-    }
-
-    public void bindRecipeList(RecipeList recipeList) {
-      Typeface raleway = Typeface.createFromAsset(mContext.getAssets(), "fonts/raleway-regular.ttf");
-      title.setTypeface(raleway);
-      desc.setTypeface(raleway);
-      title.setText(recipeList.getTitle());
-      desc.setText(String.format("Cook Time: %d minutes", recipeList.getCookTime()));
-      Picasso.with(mContext).load(String.format("%s%s", mImageBaseUrl, recipeList.getImage()))
-          .resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(img);
+    public RecipeListAdapter(RecipeListResponse recipeResponse) {
+        this.mRecipes = recipeResponse.getResults();
+        this.mImageBaseUrl = recipeResponse.getBaseUri();
     }
 
     @Override
-    public void onClick(View v) {
-      RecipeList recipe = mRecipes.get(getLayoutPosition());
-      ((MainActivity)mContext).getRecipe(recipe.getId());
+    public RecipeListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_list_item, parent, false);
+        RecipeListViewHolder viewHolder = new RecipeListViewHolder(view);
+        return viewHolder;
     }
-  }
+
+    @Override
+    public void onBindViewHolder(RecipeListViewHolder holder, final int position) {
+        holder.bindRecipeList(mRecipes.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        return mRecipes.size();
+    }
+
+    public class RecipeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private static final int MAX_WIDTH = 400;
+        private static final int MAX_HEIGHT = 300;
+        @BindView(R.id.recipe_title) TextView title;
+        @BindView(R.id.recipe_desc) TextView desc;
+        @BindView(R.id.recipe_img) ImageView img;
+
+        private Context mContext;
+
+        public RecipeListViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            mContext = itemView.getContext();
+            itemView.setOnClickListener(this);
+        }
+
+        public void bindRecipeList(RecipeList recipeList) {
+            Typeface raleway = Typeface.createFromAsset(mContext.getAssets(), "fonts/raleway-regular.ttf");
+            title.setTypeface(raleway);
+            desc.setTypeface(raleway);
+            title.setText(recipeList.getTitle());
+            desc.setText(String.format("Cook Time: %d minutes", recipeList.getCookTime()));
+            Picasso.with(mContext).load(String.format("%s%s", mImageBaseUrl, recipeList.getImage()))
+                    .resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(img);
+        }
+
+        @Override
+        public void onClick(View v) {
+            RecipeList recipe = mRecipes.get(getLayoutPosition());
+            ((MainActivity)mContext).getRecipe(recipe.getId());
+        }
+    }
 }
