@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.Instruction;
 import com.janek.recipebook.models.Recipe;
@@ -46,209 +47,241 @@ import io.reactivex.functions.BiFunction;
 import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-  private static final String BACK_STACK_ROOT_TAG = "root_fragment";
-  private static final int MAX_WIDTH = 400;
-  private static final int MAX_HEIGHT = 300;
-  private ProgressDialog loading;
+    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
+    private static final int MAX_WIDTH = 400;
+    private static final int MAX_HEIGHT = 300;
+    private ProgressDialog loading;
 
-  private final CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
-  @BindView(R.id.recipe_img_backdrop) ImageView recipeImgBackdrop;
-  @BindView(R.id.toolbar) Toolbar toolbar;
-  @BindView(R.id.drawer_layout) DrawerLayout drawer;
-  @BindView(R.id.nav_view) NavigationView navigationView;
-  @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
-  @BindView(R.id.toolbarTitle) TextView toolbarTitle;
-  @BindView(R.id.tabs) TabLayout tabs;
+    @BindView(R.id.recipe_img_backdrop) ImageView recipeImgBackdrop;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.drawer_layout) DrawerLayout drawer;
+    @BindView(R.id.nav_view) NavigationView navigationView;
+    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+    @BindView(R.id.toolbarTitle) TextView toolbarTitle;
+    @BindView(R.id.tabs) TabLayout tabs;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FragmentManager fragmentManager;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-    ButterKnife.bind(this);
-    Typeface raleway = Typeface.createFromAsset(getAssets(), "fonts/raleway-regular.ttf");
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        Typeface raleway = Typeface.createFromAsset(getAssets(), "fonts/raleway-regular.ttf");
 
-    toolbarTitle.setTypeface(raleway);
-    collapsingToolbar.setCollapsedTitleTypeface(raleway);
-    collapsingToolbar.setExpandedTitleTypeface(raleway);
-    loading = new ProgressDialog(MainActivity.this);
-    loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-    loading.setIndeterminate(true);
+        toolbarTitle.setTypeface(raleway);
+        collapsingToolbar.setCollapsedTitleTypeface(raleway);
+        collapsingToolbar.setExpandedTitleTypeface(raleway);
+        loading = new ProgressDialog(MainActivity.this);
+        loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loading.setIndeterminate(true);
 
-    setSupportActionBar(toolbar);
-    ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-    drawer.addDrawerListener(toggle);
-    toggle.syncState();
-    navigationView.setNavigationItemSelectedListener(this);
-    disableCollapse();
+        mAuth = FirebaseAuth.getInstance();
+        fragmentManager = getSupportFragmentManager();
 
-    // Listen for fragment changes and update selected nav item
-    getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-      @Override
-      public void onBackStackChanged() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (fragment instanceof HomeFragment) {
-          disableCollapse();
-          navigationView.setCheckedItem(R.id.nav_home);
-        } else if (fragment instanceof AboutFragment) {
-          disableCollapse();
-          navigationView.setCheckedItem(R.id.nav_about);
-        } else if (fragment instanceof RecipeDetailFragment) {
-          enableCollapse();
-        } else {
-          disableCollapse();
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+        disableCollapse();
+
+        // Listen for fragment changes and update selected nav item
+        fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override public void onBackStackChanged() {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                if (fragment instanceof HomeFragment) {
+                    disableCollapse();
+                    navigationView.setCheckedItem(R.id.nav_home);
+                } else if (fragment instanceof AboutFragment) {
+                    disableCollapse();
+                    navigationView.setCheckedItem(R.id.nav_about);
+                } else if (fragment instanceof RecipeDetailFragment) {
+                    enableCollapse();
+                } else {
+                    disableCollapse();
+                }
+            }
+        });
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override public void onAuthStateChanged(@android.support.annotation.NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // update nav header
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposable.clear();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
         }
-      }
-    });
-    getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
-  }
-
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    disposable.clear();
-  }
-
-
-  public void runSearch(final String search) {
-    loading.setMessage(String.format("Searching for %s recipes...", search));
-    loading.show();
-    SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-    disposable.add(spoonClient.searchRecipes(search).subscribeWith(new DisposableObserver<RecipeListResponse>() {
-      @Override public void onNext(@NonNull RecipeListResponse recipeListResponse) {
-        loadNavFragment(RecipeListFragment.newInstance(recipeListResponse, search));
-        loading.dismiss();
-      }
-      @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
-      @Override public void onComplete() {}
-    }));
-  }
-
-  public void getRecipe(int id) {
-    loading.setMessage("Getting recipe Details...");
-    loading.show();
-    SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-    disposable.add(Observable.combineLatest(spoonClient.getRecipe(id), spoonClient.getInstructions(id), new BiFunction<Recipe, List<Instruction>, Recipe>() {
-      @Override public Recipe apply(@NonNull Recipe recipe, @NonNull List<Instruction> instructions) throws Exception {
-        recipe.setFullInstructions(instructions);
-        return recipe;
-      }
-    }).subscribeWith(new DisposableObserver<Recipe>() {
-      @Override public void onNext(@NonNull Recipe recipe) {
-        loadFragment(RecipeDetailFragment.newInstance(recipe));
-        loading.dismiss();
-      }
-      @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
-      @Override public void onComplete() {}
-    }));
-  }
-
-
-  public void disableCollapse() {
-    recipeImgBackdrop.setVisibility(View.GONE);
-    toolbarTitle.setVisibility(View.VISIBLE);
-    tabs.setVisibility(View.GONE);
-    collapsingToolbar.setTitleEnabled(false);
-  }
-
-  public void enableCollapse() {
-    recipeImgBackdrop.setVisibility(View.VISIBLE);
-    toolbarTitle.setVisibility(View.GONE);
-    tabs.setVisibility(View.VISIBLE);
-    collapsingToolbar.setTitleEnabled(true);
-  }
-
-
-  public void setBackdropImg(String url) {
-    Picasso.with(this).load(url).resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(recipeImgBackdrop);
-  }
-
-  public void setRecipeTitle(String title) {
-    collapsingToolbar.setTitle(title);
-  }
-
-  public void setToolbarTitle(String title) {
-    setTitle("");
-    toolbarTitle.setText(title);
-  }
-
-  public void setTabLayout(ViewPager viewPager) {
-    tabs.setupWithViewPager(viewPager);
-  }
-
-
-  @Override
-  public void onBackPressed() {
-    if (drawer.isDrawerOpen(GravityCompat.START)) {
-      drawer.closeDrawer(GravityCompat.START);
-    } else {
-      super.onBackPressed();
     }
-  }
-
-// Tool bar right menu items handled here. Add search bar here to make it available on all pages.
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.main, menu);
-    final MenuItem menuItem = menu.findItem(R.id.action_search);
-
-    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-      @Override public boolean onQueryTextSubmit(String query) {
-        runSearch(query);
-        MenuItemCompat.collapseActionView(menuItem);
-        return false;
-      }
-      @Override public boolean onQueryTextChange(String newText) {
-        return false;
-      }
-    });
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    return super.onOptionsItemSelected(item);
-  }
 
 
-  public void loadNavFragment(Fragment fragment) {
-    FragmentManager fragmentManager = getSupportFragmentManager();
-    fragmentManager.popBackStack(BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-    fragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        .replace(R.id.content_frame, fragment)
-        .addToBackStack(BACK_STACK_ROOT_TAG).commit();
-  }
-
-  public void loadFragment(Fragment fragment) {
-    FragmentManager fragmentManger = getSupportFragmentManager();
-    fragmentManger.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        .replace(R.id.content_frame, fragment).addToBackStack(null).commit();
-  }
-
-  @SuppressWarnings("StatementWithEmptyBody")
-  @Override
-  public boolean onNavigationItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.nav_home:
-        loadNavFragment(new HomeFragment());
-        break;
-      case R.id.nav_about:
-        loadNavFragment(new AboutFragment());
-        break;
-      default:
-        loadNavFragment(new HomeFragment());
+    public void runSearch(final String search) {
+        loading.setMessage(String.format("Searching for %s recipes...", search));
+        loading.show();
+        SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
+        disposable.add(spoonClient.searchRecipes(search).subscribeWith(new DisposableObserver<RecipeListResponse>() {
+            @Override public void onNext(@NonNull RecipeListResponse recipeListResponse) {
+                loadNavFragment(RecipeListFragment.newInstance(recipeListResponse, search));
+                loading.dismiss();
+            }
+            @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
+            @Override public void onComplete() {}
+        }));
     }
-    drawer.closeDrawer(GravityCompat.START);
-    return true;
-  }
 
-  private void logout() {
-    FirebaseAuth.getInstance().signOut();
-    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-    startActivity(intent);
-    finish();
-  }
+    public void getRecipe(int id) {
+        loading.setMessage("Getting recipe Details...");
+        loading.show();
+        SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
+        disposable.add(Observable.combineLatest(spoonClient.getRecipe(id), spoonClient.getInstructions(id), new BiFunction<Recipe, List<Instruction>, Recipe>() {
+            @Override public Recipe apply(@NonNull Recipe recipe, @NonNull List<Instruction> instructions) throws Exception {
+                recipe.setFullInstructions(instructions);
+                return recipe;
+            }
+        }).subscribeWith(new DisposableObserver<Recipe>() {
+            @Override public void onNext(@NonNull Recipe recipe) {
+                loadFragment(RecipeDetailFragment.newInstance(recipe));
+                loading.dismiss();
+            }
+            @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
+            @Override public void onComplete() {}
+        }));
+    }
+
+
+    public void disableCollapse() {
+        recipeImgBackdrop.setVisibility(View.GONE);
+        toolbarTitle.setVisibility(View.VISIBLE);
+        tabs.setVisibility(View.GONE);
+        collapsingToolbar.setTitleEnabled(false);
+    }
+
+    public void enableCollapse() {
+        recipeImgBackdrop.setVisibility(View.VISIBLE);
+        toolbarTitle.setVisibility(View.GONE);
+        tabs.setVisibility(View.VISIBLE);
+        collapsingToolbar.setTitleEnabled(true);
+    }
+
+
+    public void setBackdropImg(String url) {
+        Picasso.with(this).load(url).resize(MAX_WIDTH, MAX_HEIGHT).centerCrop().into(recipeImgBackdrop);
+    }
+
+    public void setRecipeTitle(String title) {
+        collapsingToolbar.setTitle(title);
+    }
+
+    public void setToolbarTitle(String title) {
+        setTitle("");
+        toolbarTitle.setText(title);
+    }
+
+    public void setTabLayout(ViewPager viewPager) {
+        tabs.setupWithViewPager(viewPager);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    // Tool bar right menu items handled here. Add search bar here to make it available on all pages.
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        final MenuItem menuItem = menu.findItem(R.id.action_search);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override public boolean onQueryTextSubmit(String query) {
+                runSearch(query);
+                MenuItemCompat.collapseActionView(menuItem);
+                return false;
+            }
+            @Override public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    public void loadNavFragment(Fragment fragment) {
+        fragmentManager.popBackStack(BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.content_frame, fragment)
+                .addToBackStack(BACK_STACK_ROOT_TAG).commit();
+    }
+
+    public void loadFragment(Fragment fragment) {
+        fragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_home:
+                loadNavFragment(new HomeFragment());
+                break;
+            case R.id.nav_about:
+                loadNavFragment(new AboutFragment());
+                break;
+            case R.id.nav_logout:
+                logout();
+                break;
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void logout() {
+        mAuth.signOut();
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
 }
