@@ -48,7 +48,7 @@
         app:layout_constraintVertical_bias="0.26999998"/>
 
     <EditText
-        android:id="@+id/confirmEditText"
+        android:id="@+id/passwordEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
@@ -65,7 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/emailEditText"/>
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/signUpButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -77,9 +77,9 @@
         android:textColor="@color/colorTextIcons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/confirmEditText"
+        app:layout_constraintLeft_toLeftOf="@+id/passwordEditText"
         app:layout_constraintRight_toLeftOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/confirmEditText"
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
         app:layout_constraintVertical_bias="0.23000002"/>
 
     <Button
@@ -94,8 +94,8 @@
         android:textColor="@color/colorTextIcons"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="@+id/guideline"
-        app:layout_constraintRight_toRightOf="@+id/confirmEditText"
-        app:layout_constraintTop_toTopOf="@+id/loginButton"/>
+        app:layout_constraintRight_toRightOf="@+id/passwordEditText"
+        app:layout_constraintTop_toTopOf="@+id/signUpButton"/>
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"

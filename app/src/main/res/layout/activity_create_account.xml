@@ -27,6 +27,27 @@
     app:srcCompat="@drawable/background"/>
 
     <EditText
+        android:id="@+id/nameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/colorTextIcons"
+        android:ems="10"
+        android:hint="User Name"
+        android:inputType="textPersonName"
+        android:textColor="@color/colorTextIcons"
+        android:textColorHint="@color/colorTextIcons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.16000003"/>
+
+    <EditText
         android:id="@+id/emailEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -39,10 +60,28 @@
         android:inputType="textEmailAddress"
         android:textColor="@color/colorTextIcons"
         android:textColorHint="@color/colorTextIcons"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="@+id/nameEditText"
         app:layout_constraintRight_toRightOf="@+id/nameEditText"
         app:layout_constraintTop_toBottomOf="@+id/nameEditText"/>
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/colorTextIcons"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="@color/colorTextIcons"
+        android:textColorHint="@color/colorTextIcons"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="@+id/emailEditText"
+        app:layout_constraintRight_toRightOf="@+id/emailEditText"
+        app:layout_constraintTop_toBottomOf="@+id/emailEditText"/>
 
     <EditText
         android:id="@+id/confirmEditText"
@@ -59,21 +98,23 @@
         android:textColorHint="@color/colorTextIcons"
         app:layout_constraintLeft_toLeftOf="@+id/passwordEditText"
         app:layout_constraintRight_toRightOf="@+id/passwordEditText"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"/>
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
+        app:layout_constraintHorizontal_bias="0.5"/>
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/signUpButton"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorAccent"
+        android:elevation="15dp"
         android:text="Sign Up"
         android:textColor="@color/colorTextIcons"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="@+id/confirmEditText"
         app:layout_constraintRight_toRightOf="@+id/confirmEditText"
         app:layout_constraintTop_toBottomOf="@+id/confirmEditText"
@@ -89,48 +130,10 @@
         android:backgroundTint="@color/colorPrimary"
         android:text="Already a member?"
         android:textColor="@color/colorTextIcons"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/loginButton"
-        app:layout_constraintRight_toRightOf="@+id/loginButton"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="@+id/signUpButton"
+        app:layout_constraintRight_toRightOf="@+id/signUpButton"
+        app:layout_constraintTop_toBottomOf="@+id/signUpButton"
         />
 
-    <EditText
-        android:id="@+id/nameEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/colorTextIcons"
-        android:ems="10"
-        android:hint="User Name"
-        android:inputType="textPersonName"
-        android:textColor="@color/colorTextIcons"
-        android:textColorHint="@color/colorTextIcons"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.089999974"/>
-
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/colorTextIcons"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:textColor="@color/colorTextIcons"
-        android:textColorHint="@color/colorTextIcons"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/emailEditText"
-        app:layout_constraintRight_toRightOf="@+id/emailEditText"
-        app:layout_constraintTop_toBottomOf="@+id/emailEditText"/>
 </android.support.constraint.ConstraintLayout>
