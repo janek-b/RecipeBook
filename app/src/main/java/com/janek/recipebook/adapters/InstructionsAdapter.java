@@ -17,7 +17,7 @@ import com.janek.recipebook.models.Step;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class InstructionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -51,9 +51,7 @@ public class InstructionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
   @Override
   public int getItemViewType(int position) {
-    int viewType = 0;
-    if (steps.get(position) instanceof String) viewType = 1;
-    return viewType;
+    return steps.get(position) instanceof String ? 1 : 0;
   }
 
   @Override
@@ -62,10 +60,10 @@ public class InstructionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   }
 
   public class InstructionsViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.step_number) TextView stepNumberTextView;
-    @Bind(R.id.step_desc) TextView stepDescTextView;
-    @Bind(R.id.ingredients_instructions_label) TextView ingredientLabel;
-    @Bind(R.id.step_layout) LinearLayout stepLayout;
+    @BindView(R.id.step_number) TextView stepNumberTextView;
+    @BindView(R.id.step_desc) TextView stepDescTextView;
+    @BindView(R.id.ingredients_instructions_label) TextView ingredientLabel;
+    @BindView(R.id.step_layout) LinearLayout stepLayout;
 
     private Context mContext;
 
@@ -78,11 +76,10 @@ public class InstructionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void bindInstructions(Step step) {
       stepNumberTextView.setText(String.format("%d", step.getNumber()));
       stepDescTextView.setText(step.getStep());
-      if (step.getIngredients().size() > 0) {
-        ingredientLabel.setVisibility(View.VISIBLE);
-      } else {
-        ingredientLabel.setVisibility(View.GONE);
-      }
+
+      if (step.getIngredients().size() > 0) ingredientLabel.setVisibility(View.VISIBLE);
+      else ingredientLabel.setVisibility(View.GONE);
+
       for (Item ingredient : step.getIngredients()) {
         TextView ingredientView = new TextView(mContext);
         ingredientView.setText(ingredient.getName());
@@ -93,7 +90,7 @@ public class InstructionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
   }
 
   public class InstructionTitleViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.instruction_title) TextView instructionTitleTextView;
+    @BindView(R.id.instruction_title) TextView instructionTitleTextView;
 
     private Context mContext;
 

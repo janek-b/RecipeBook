@@ -14,13 +14,13 @@ import com.janek.recipebook.adapters.RestaurantDetailPagerAdapter;
 import com.janek.recipebook.models.Recipe;
 import org.parceler.Parcels;
 
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class RecipeDetailFragment extends Fragment {
-  @Bind(R.id.recipe_detail_viewPager) ViewPager viewPager;
-
+  @BindView(R.id.recipe_detail_viewPager) ViewPager viewPager;
+  private Unbinder unbinder;
   private Recipe recipe;
 
   public static RecipeDetailFragment newInstance(Recipe recipe) {
@@ -41,13 +41,19 @@ public class RecipeDetailFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
-    ButterKnife.bind(this, view);
+    unbinder = ButterKnife.bind(this, view);
     RestaurantDetailPagerAdapter adapter = new RestaurantDetailPagerAdapter(getChildFragmentManager());
     adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe), "Summary");
     adapter.addFragment(InstructionsFragment.newInstance(recipe), "Instructions");
     viewPager.setAdapter(adapter);
     ((MainActivity)getActivity()).setTabLayout(viewPager);
     return view;
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    unbinder.unbind();
   }
 
 

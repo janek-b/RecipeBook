@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
@@ -50,9 +50,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
   public class RecipeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
-    @Bind(R.id.recipe_title) TextView title;
-    @Bind(R.id.recipe_desc) TextView desc;
-    @Bind(R.id.recipe_img) ImageView img;
+    @BindView(R.id.recipe_title) TextView title;
+    @BindView(R.id.recipe_desc) TextView desc;
+    @BindView(R.id.recipe_img) ImageView img;
 
     private Context mContext;
 

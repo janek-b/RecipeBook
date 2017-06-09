@@ -14,23 +14,31 @@ import android.widget.Toast;
 
 import com.janek.recipebook.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 public class HomeFragment extends Fragment {
-  @Bind(R.id.home_title) TextView mTitle;
-  @Bind(R.id.search_field) EditText mSearchField;
-  @Bind(R.id.search_button) Button mSearchButton;
+  @BindView(R.id.home_title) TextView mTitle;
+  @BindView(R.id.search_field) EditText mSearchField;
+  @BindView(R.id.search_button) Button mSearchButton;
+  private Unbinder unbinder;
 
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_home, container, false);
-    ButterKnife.bind(this, view);
+    unbinder = ButterKnife.bind(this, view);
     Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
     mTitle.setTypeface(raleway);
     return view;
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    unbinder.unbind();
   }
 
   @Override

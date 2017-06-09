@@ -15,11 +15,13 @@ import com.janek.recipebook.models.RecipeListResponse;
 
 import org.parceler.Parcels;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class RecipeListFragment extends Fragment {
-  @Bind(R.id.recipe_list) RecyclerView mRecipeList;
+  @BindView(R.id.recipe_list) RecyclerView mRecipeList;
+  private Unbinder unbinder;
   private String searchInput;
   private RecipeListResponse recipeResponse;
 
@@ -43,13 +45,19 @@ public class RecipeListFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
-    ButterKnife.bind(this, view);
+    unbinder = ButterKnife.bind(this, view);
     mRecipeList.setAdapter(new RecipeListAdapter(recipeResponse));
     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
     mRecipeList.setLayoutManager(layoutManager);
     mRecipeList.setHasFixedSize(true);
     mRecipeList.setNestedScrollingEnabled(false);
     return view;
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    unbinder.unbind();
   }
 
   @Override

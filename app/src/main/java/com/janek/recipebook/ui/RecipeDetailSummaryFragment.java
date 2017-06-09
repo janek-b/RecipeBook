@@ -21,20 +21,21 @@ import com.janek.recipebook.models.Recipe;
 
 import org.parceler.Parcels;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class RecipeDetailSummaryFragment extends Fragment implements View.OnClickListener {
-  @Bind(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
-  @Bind(R.id.recipe_detail_servings) TextView servingsTextView;
-  @Bind(R.id.ingredients_label) TextView ingredientsLabel;
-  @Bind(R.id.websiteTextView) TextView websiteTextView;
-  @Bind(R.id.dairyFreeIcon) ImageView dairyFreeIcon;
-  @Bind(R.id.glutenFreeIcon) ImageView glutenFreeIcon;
-  @Bind(R.id.veganIcon) ImageView veganIcon;
-  @Bind(R.id.vegetarianIcon) ImageView vegetarianIcon;
-  @Bind(R.id.ingredient_list_layout) LinearLayout ingredientListLayout;
-
+  @BindView(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
+  @BindView(R.id.recipe_detail_servings) TextView servingsTextView;
+  @BindView(R.id.ingredients_label) TextView ingredientsLabel;
+  @BindView(R.id.websiteTextView) TextView websiteTextView;
+  @BindView(R.id.dairyFreeIcon) ImageView dairyFreeIcon;
+  @BindView(R.id.glutenFreeIcon) ImageView glutenFreeIcon;
+  @BindView(R.id.veganIcon) ImageView veganIcon;
+  @BindView(R.id.vegetarianIcon) ImageView vegetarianIcon;
+  @BindView(R.id.ingredient_list_layout) LinearLayout ingredientListLayout;
+  private Unbinder unbinder;
   private Recipe recipe;
 
   public static RecipeDetailSummaryFragment newInstance(Recipe recipe) {
@@ -55,7 +56,7 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_recipe_detail_summary, container, false);
-    ButterKnife.bind(this, view);
+    unbinder = ButterKnife.bind(this, view);
     Typeface raleway = Typeface.createFromAsset(getActivity().getAssets(), "fonts/raleway-regular.ttf");
     cookTimeTextView.setTypeface(raleway);
     servingsTextView.setTypeface(raleway);
@@ -68,6 +69,12 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
 
     websiteTextView.setOnClickListener(this);
     return view;
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    unbinder.unbind();
   }
 
   @Override

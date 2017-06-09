@@ -35,8 +35,9 @@ import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -51,19 +52,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
   private final CompositeDisposable disposable = new CompositeDisposable();
 
-  @Bind(R.id.recipe_img_backdrop) ImageView recipeImgBackdrop;
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.drawer_layout) DrawerLayout drawer;
-  @Bind(R.id.nav_view) NavigationView navigationView;
-  @Bind(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
-  @Bind(R.id.toolbarTitle) TextView toolbarTitle;
-  @Bind(R.id.tabs) TabLayout tabs;
+  @BindView(R.id.recipe_img_backdrop) ImageView recipeImgBackdrop;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.drawer_layout) DrawerLayout drawer;
+  @BindView(R.id.nav_view) NavigationView navigationView;
+  @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
+  @BindView(R.id.toolbarTitle) TextView toolbarTitle;
+  @BindView(R.id.tabs) TabLayout tabs;
+  private Unbinder unbinder;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    ButterKnife.bind(this);
+    unbinder = ButterKnife.bind(this);
     Typeface raleway = Typeface.createFromAsset(getAssets(), "fonts/raleway-regular.ttf");
 
     toolbarTitle.setTypeface(raleway);
@@ -105,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   public void onDestroy() {
     super.onDestroy();
     disposable.clear();
+    unbinder.unbind();
   }
 
 

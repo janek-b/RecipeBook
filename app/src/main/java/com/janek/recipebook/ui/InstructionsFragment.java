@@ -21,11 +21,13 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class InstructionsFragment extends Fragment {
-  @Bind(R.id.instructionsList) RecyclerView instructionsListView;
+  @BindView(R.id.instructionsList) RecyclerView instructionsListView;
+  private Unbinder unbinder;
   private Recipe recipe;
 
 
@@ -47,12 +49,17 @@ public class InstructionsFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_instructions, container, false);
-    ButterKnife.bind(this, view);
-//    instructionsListView.setAdapter(new InstructionsAdapter(recipe.getFullInstructions().get(0)));
+    unbinder = ButterKnife.bind(this, view);
     instructionsListView.setAdapter(new InstructionsAdapter(flattenInstructions(recipe)));
     instructionsListView.setLayoutManager(new LinearLayoutManager(getActivity()));
     instructionsListView.setHasFixedSize(true);
     return view;
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    unbinder.unbind();
   }
 
   @Override
@@ -63,8 +70,7 @@ public class InstructionsFragment extends Fragment {
   private List<Object> flattenInstructions(Recipe recipe) {
     List<Object> flat = new ArrayList<>();
     for (Instruction instruction : recipe.getFullInstructions()) {
-      if (instruction.getName().equals("")) flat.add(recipe.getTitle());
-      else flat.add(instruction.getName());
+      flat.add(instruction.getName().equals("") ? recipe.getTitle() : instruction.getName());
       for (Step step : instruction.getSteps()) {
         flat.add(step);
       }
