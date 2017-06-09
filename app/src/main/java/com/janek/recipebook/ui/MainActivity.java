@@ -61,6 +61,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.toolbarTitle) TextView toolbarTitle;
     @BindView(R.id.tabs) TabLayout tabs;
+
+    private View navDrawerHeader;
+    private TextView navDrawerTitle;
+    private TextView userProfileName;
+    private ImageView userProfileImg;
+
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FragmentManager fragmentManager;
@@ -69,12 +76,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         Typeface raleway = Typeface.createFromAsset(getAssets(), "fonts/raleway-regular.ttf");
-
+        // Bind Views
+        ButterKnife.bind(this);
+        navDrawerHeader = navigationView.getHeaderView(0);
+        navDrawerTitle = (TextView) navDrawerHeader.findViewById(R.id.nav_drawer_title);
+        userProfileName = (TextView) navDrawerHeader.findViewById(R.id.user_profile_name);
+        userProfileImg = (ImageView) navDrawerHeader.findViewById(R.id.user_profile_img);
+        // Set Typeface
         toolbarTitle.setTypeface(raleway);
         collapsingToolbar.setCollapsedTitleTypeface(raleway);
         collapsingToolbar.setExpandedTitleTypeface(raleway);
+        navDrawerTitle.setTypeface(raleway);
+        // Initialize Progress Dialog
         loading = new ProgressDialog(MainActivity.this);
         loading.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         loading.setIndeterminate(true);
@@ -112,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // update nav header
+                    userProfileName.setText(user.getDisplayName());
+                    Picasso.with(MainActivity.this).load(user.getPhotoUrl()).resize(50, 50).centerCrop().into(userProfileImg);
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
                 } else {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
