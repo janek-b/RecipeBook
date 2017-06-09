@@ -37,7 +37,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -59,13 +58,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
   @BindView(R.id.toolbarTitle) TextView toolbarTitle;
   @BindView(R.id.tabs) TabLayout tabs;
-  private Unbinder unbinder;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    unbinder = ButterKnife.bind(this);
+    ButterKnife.bind(this);
     Typeface raleway = Typeface.createFromAsset(getAssets(), "fonts/raleway-regular.ttf");
 
     toolbarTitle.setTypeface(raleway);
@@ -107,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   public void onDestroy() {
     super.onDestroy();
     disposable.clear();
-    unbinder.unbind();
   }
 
 
