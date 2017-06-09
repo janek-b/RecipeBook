@@ -22,11 +22,13 @@ public class RecipeDetailFragment extends Fragment {
     @BindView(R.id.recipe_detail_viewPager) ViewPager viewPager;
     private Unbinder unbinder;
     private Recipe recipe;
+    private boolean userSaved;
 
-    public static RecipeDetailFragment newInstance(Recipe recipe) {
+    public static RecipeDetailFragment newInstance(Recipe recipe, boolean userSaved) {
         RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
         Bundle args = new Bundle();
         args.putParcelable("recipe", Parcels.wrap(recipe));
+        args.putBoolean("userSaved", userSaved);
         recipeDetailFragment.setArguments(args);
         return recipeDetailFragment;
     }
@@ -35,7 +37,9 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recipe = Parcels.unwrap(getArguments().getParcelable("recipe"));
+        Bundle args = getArguments();
+        recipe = Parcels.unwrap(args.getParcelable("recipe"));
+        userSaved = args.getBoolean("userSaved");
     }
 
     @Nullable
@@ -44,7 +48,7 @@ public class RecipeDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
         RestaurantDetailPagerAdapter adapter = new RestaurantDetailPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe), "Summary");
+        adapter.addFragment(RecipeDetailSummaryFragment.newInstance(recipe, userSaved), "Summary");
         adapter.addFragment(InstructionsFragment.newInstance(recipe), "Instructions");
         viewPager.setAdapter(adapter);
         ((MainActivity)getActivity()).setTabLayout(viewPager);

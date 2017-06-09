@@ -71,41 +71,19 @@
                     android:textStyle="bold"/>
 
                 <ToggleButton
-                    android:id="@+id/toggleButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/savedButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
+                    android:layout_below="@+id/recipe_detail_servings"
                     android:background="@null"
+                    android:button="@drawable/saved"
                     android:checked="false"
-                    android:drawableRight="@drawable/saved"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:text="ToggleButton"
                     android:textOff=""
                     android:textOn=""/>
-
-                <!--<ImageButton-->
-                    <!--android:id="@+id/imageButton"-->
-                    <!--style="@style/Widget.AppCompat.ImageButton"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentBottom="true"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--app:srcCompat="@android:drawable/btn_star_big_off"/>-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/toggleSaved"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:drawableLeft="@drawable/ic_exit_to_app_white_24dp"-->
-                    <!--android:drawablePadding="4dp"-->
-                    <!--android:gravity="center"-->
-                    <!--android:text="Save Recipe"-->
-                    <!--android:textColor="@color/colorTextIcons"-->
-                    <!--android:textStyle="bold"/>-->
 
                 <ImageView
                     android:id="@+id/dairyFreeIcon"

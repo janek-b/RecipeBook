@@ -2,6 +2,8 @@ package com.janek.recipebook.models;
 
 import org.parceler.Parcel;
 
+import java.util.List;
+
 
 @Parcel
 public class Ingredient {
@@ -14,11 +16,11 @@ public class Ingredient {
     String unitShort;
     String unitLong;
     String originalString;
-    String[] metaInformation;
+    List<String> metaInformation;
 
     public Ingredient() {}
 
-    public Ingredient(int id, String aisle, String image, String name, float amount, String unit, String unitShort, String unitLong, String originalString, String[] metaInformation) {
+    public Ingredient(int id, String aisle, String image, String name, float amount, String unit, String unitShort, String unitLong, String originalString, List<String> metaInformation) {
         this.id = id;
         this.aisle = aisle;
         this.image = image;
@@ -67,7 +69,7 @@ public class Ingredient {
         return originalString;
     }
 
-    public String[] getMetaInformation() {
+    public List<String> getMetaInformation() {
         return metaInformation;
     }
 }

@@ -26,6 +26,12 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.Instruction;
 import com.janek.recipebook.models.Recipe;
@@ -67,9 +73,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView userProfileName;
     private ImageView userProfileImg;
 
-
+    private DatabaseReference rootRef;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser currentUser;
     private FragmentManager fragmentManager;
 
     @Override
@@ -94,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loading.setIndeterminate(true);
 
         mAuth = FirebaseAuth.getInstance();
+        rootRef = FirebaseDatabase.getInstance().getReference();
         fragmentManager = getSupportFragmentManager();
 
         setSupportActionBar(toolbar);
@@ -123,11 +131,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override public void onAuthStateChanged(@android.support.annotation.NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                currentUser = firebaseAuth.getCurrentUser();
+                if (currentUser != null) {
                     // update nav header
-                    userProfileName.setText(user.getDisplayName());
-                    Picasso.with(MainActivity.this).load(user.getPhotoUrl()).resize(50, 50).centerCrop().into(userProfileImg);
+                    userProfileName.setText(currentUser.getDisplayName());
+                    Picasso.with(MainActivity.this).load(currentUser.getPhotoUrl()).resize(50, 50).centerCrop().into(userProfileImg);
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
                 } else {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -184,9 +192,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return recipe;
             }
         }).subscribeWith(new DisposableObserver<Recipe>() {
-            @Override public void onNext(@NonNull Recipe recipe) {
-                loadFragment(RecipeDetailFragment.newInstance(recipe));
-                loading.dismiss();
+            @Override public void onNext(@NonNull final Recipe recipe) {
+                rootRef.child(String.format(Constants.FIREBASE_USER_RECIPES_REF, currentUser.getUid(), recipe.getId()))
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override public void onDataChange(DataSnapshot dataSnapshot) {
+                        loadFragment(RecipeDetailFragment.newInstance(recipe, dataSnapshot.exists()));
+                        loading.dismiss();
+                    }
+                    @Override public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
             }
             @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
             @Override public void onComplete() {}

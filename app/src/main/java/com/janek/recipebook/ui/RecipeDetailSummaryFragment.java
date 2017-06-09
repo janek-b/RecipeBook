@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +15,35 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.Ingredient;
 import com.janek.recipebook.models.Recipe;
 
 import org.parceler.Parcels;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 public class RecipeDetailSummaryFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
@@ -35,13 +55,18 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
     @BindView(R.id.veganIcon) ImageView veganIcon;
     @BindView(R.id.vegetarianIcon) ImageView vegetarianIcon;
     @BindView(R.id.ingredient_list_layout) LinearLayout ingredientListLayout;
+    @BindView(R.id.savedButton) ToggleButton savedButton;
+    private final CompositeDisposable disposable = new CompositeDisposable();
     private Unbinder unbinder;
     private Recipe recipe;
+    private boolean userSaved;
+    private DatabaseReference rootRef;
 
-    public static RecipeDetailSummaryFragment newInstance(Recipe recipe) {
+    public static RecipeDetailSummaryFragment newInstance(Recipe recipe, boolean userSaved) {
         RecipeDetailSummaryFragment recipeDetailSummaryFragment = new RecipeDetailSummaryFragment();
         Bundle args = new Bundle();
         args.putParcelable("recipe", Parcels.wrap(recipe));
+        args.putBoolean("userSaved", userSaved);
         recipeDetailSummaryFragment.setArguments(args);
         return recipeDetailSummaryFragment;
     }
@@ -49,7 +74,10 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recipe = Parcels.unwrap(getArguments().getParcelable("recipe"));
+        Bundle args = getArguments();
+        recipe = Parcels.unwrap(args.getParcelable("recipe"));
+        userSaved = args.getBoolean("userSaved");
+        rootRef = FirebaseDatabase.getInstance().getReference();
     }
 
     @Nullable
@@ -68,6 +96,15 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
         setVisibility(vegetarianIcon, recipe.isVegetarian());
 
         websiteTextView.setOnClickListener(this);
+
+        savedButton.setChecked(userSaved);
+
+        disposable.add(RxCompoundButton.checkedChanges(savedButton).skipInitialValue().subscribe(new Consumer<Boolean>() {
+            @Override public void accept(@NonNull Boolean save) throws Exception {
+                saveRecipe(save);
+            }
+        }));
+
         return view;
     }
 
@@ -75,6 +112,7 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        disposable.clear();
     }
 
     @Override
@@ -106,5 +144,29 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
             Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(recipe.getSourceUrl()));
             startActivity(webIntent);
         }
+    }
+
+    public void saveRecipe(final boolean save) {
+        final String recipeRef = String.format("%s/%d", Constants.FIREBASE_RECIPE_REF, recipe.getId());
+        final String recipeSaveRef = String.format(Constants.FIREBASE_USER_RECIPES_REF, FirebaseAuth.getInstance().getCurrentUser().getUid(), recipe.getId());
+        rootRef.child(recipeRef).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Map updates = new HashMap();
+                if (!dataSnapshot.exists()) updates.put(recipeRef, recipe);
+                updates.put(recipeSaveRef, (save ? save : null));
+
+                rootRef.updateChildren(updates).addOnCompleteListener(new OnCompleteListener() {
+                    @Override public void onComplete(@android.support.annotation.NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getActivity(), save ? "Recipe Saved!" : "Recipe Removed!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+            @Override public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 }
