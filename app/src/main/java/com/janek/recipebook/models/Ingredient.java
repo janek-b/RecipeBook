@@ -2,6 +2,7 @@ package com.janek.recipebook.models;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,7 +17,7 @@ public class Ingredient {
     String unitShort;
     String unitLong;
     String originalString;
-    List<String> metaInformation;
+    List<String> metaInformation = new ArrayList<>();
 
     public Ingredient() {}
 

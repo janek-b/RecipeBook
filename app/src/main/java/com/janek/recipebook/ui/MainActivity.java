@@ -121,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } else if (fragment instanceof AboutFragment) {
                     disableCollapse();
                     navigationView.setCheckedItem(R.id.nav_about);
+                } else if (fragment instanceof SavedRecipeListFragment) {
+                    disableCollapse();
+                    navigationView.setCheckedItem(R.id.nav_saved_recipes);
                 } else if (fragment instanceof RecipeDetailFragment) {
                     enableCollapse();
                 } else {

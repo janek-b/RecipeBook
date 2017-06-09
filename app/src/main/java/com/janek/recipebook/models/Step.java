@@ -2,14 +2,15 @@ package com.janek.recipebook.models;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Parcel
 public class Step {
     int number;
     String step;
-    List<Item> ingredients;
-    List<Item> equipment;
+    List<Item> ingredients = new ArrayList<>();
+    List<Item> equipment = new ArrayList<>();
 
 
     public Step() {}

@@ -3,16 +3,22 @@ package com.janek.recipebook.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.ui.database.FirebaseIndexRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
+import com.janek.recipebook.adapters.FirebaseRecipeListViewHolder;
+import com.janek.recipebook.models.Recipe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +28,7 @@ public class SavedRecipeListFragment extends Fragment {
     private Unbinder unbinder;
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef;
+    private FirebaseRecyclerAdapter mFirebaseAdapter;
     @BindView(R.id.savedRecipeRecyclerView) RecyclerView savedRecipeRecyclerView;
 
 
@@ -40,7 +47,17 @@ public class SavedRecipeListFragment extends Fragment {
         DatabaseReference savedRecipeRef = rootRef.child(userRecipes);
         DatabaseReference recipeRef = rootRef.child(Constants.FIREBASE_RECIPE_REF);
 
-
+        mFirebaseAdapter = new FirebaseIndexRecyclerAdapter<Recipe, FirebaseRecipeListViewHolder>(Recipe.class,
+                R.layout.recipe_list_item, FirebaseRecipeListViewHolder.class, savedRecipeRef, recipeRef) {
+            @Override
+            protected void populateViewHolder(FirebaseRecipeListViewHolder viewHolder, Recipe model, int position) {
+                viewHolder.bindRecipe(model);
+            }
+        };
+        savedRecipeRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        savedRecipeRecyclerView.setLayoutManager(layoutManager);
+        savedRecipeRecyclerView.setAdapter(mFirebaseAdapter);
         return view;
     }
 

@@ -3,6 +3,7 @@ package com.janek.recipebook.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class FirebaseRecipeListViewHolder extends RecyclerView.ViewHolder implem
         ButterKnife.bind(this, itemView);
         mView = itemView;
         mContext = itemView.getContext();
+        itemView.setOnClickListener(this);
     }
 
     public void bindRecipe(Recipe recipe) {

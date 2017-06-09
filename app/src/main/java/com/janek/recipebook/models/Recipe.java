@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,14 +17,14 @@ public class Recipe {
     int servings;
     String sourceUrl;
     @SerializedName("extendedIngredients")
-    List<Ingredient> ingredients;
+    List<Ingredient> ingredients = new ArrayList<>();
     int id;
     String title;
     @SerializedName("readyInMinutes")
     int cookTime;
     String image;
     String instructions;
-    List<Instruction> fullInstructions;
+    List<Instruction> fullInstructions = new ArrayList<>();
 
     public void setFullInstructions(List<Instruction> fullInstructions) {
         this.fullInstructions = fullInstructions;
