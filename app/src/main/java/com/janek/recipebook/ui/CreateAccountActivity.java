@@ -80,6 +80,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         disposable.add(RxView.clicks(loginButton).subscribe(new Consumer<Object>() {
             @Override public void accept(@NonNull Object o) throws Exception {
                 Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         }));
