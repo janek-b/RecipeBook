@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.home_title) TextView mTitle;
     @BindView(R.id.search_field) EditText mSearchField;
     @BindView(R.id.search_button) Button mSearchButton;
+    @BindView(R.id.diet_selector) Spinner mDietSelector;
     private Unbinder unbinder;
 
 

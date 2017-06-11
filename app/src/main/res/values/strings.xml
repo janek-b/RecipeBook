@@ -16,65 +16,10 @@
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut feugiat auctor consectetur. Proin et risus efficitur, rhoncus magna eu, hendrerit lectus. Cras ut porttitor ipsum. Praesent suscipit nunc eu commodo semper. Vivamus sit amet mauris elementum, rhoncus metus nec, vulputate tellus. Sed eget volutpat tellus. Donec dictum justo vel dolor aliquam aliquam. Donec pharetra sagittis ultrices. Etiam elementum ac sem quis volutpat. Proin dui elit, feugiat ac dolor vel, bibendum pellentesque urna. Nulla sed faucibus diam. Nunc at nulla sem.</string>
 
 
-    <string-array name="recipe_name">
-        <item>Recipe 1</item>
-        <item>Recipe 2</item>
-        <item>Recipe 3</item>
-        <item>Recipe 4</item>
-        <item>Recipe 5</item>
-        <item>Recipe 6</item>
-        <item>Recipe 7</item>
-        <item>Recipe 8</item>
-        <item>Recipe 9</item>
-        <item>Recipe 10</item>
-        <item>Recipe 11</item>
-        <item>Recipe 12</item>
-        <item>Recipe 13</item>
-        <item>Recipe 14</item>
-        <item>Recipe 15</item>
-        <item>Recipe 16</item>
+    <string-array name="diets">
+        <item>pescetarian</item>
+        <item>vegan</item>
+        <item>vegetarian</item>
     </string-array>
-    <string-array name="recipe_description">
-        <item>Recipe 1 description</item>
-        <item>Recipe 2 description</item>
-        <item>Recipe 3 description</item>
-        <item>Recipe 4 description</item>
-        <item>Recipe 5 description</item>
-        <item>Recipe 6 description</item>
-        <item>Recipe 7 description</item>
-        <item>Recipe 8 description</item>
-        <item>Recipe 9 description</item>
-        <item>Recipe 10 description</item>
-        <item>Recipe 11 description</item>
-        <item>Recipe 12 description</item>
-        <item>Recipe 13 description</item>
-        <item>Recipe 14 description</item>
-        <item>Recipe 15 description</item>
-        <item>Recipe 16 description</item>
-    </string-array>
-
-
-    <string-array name="ingredients">
-        <item>Ingredient 1</item>
-        <item>Ingredient 2</item>
-        <item>Ingredient 3</item>
-        <item>Ingredient 4</item>
-        <item>Ingredient 5</item>
-        <item>Ingredient 6</item>
-        <item>Ingredient 7</item>
-        <item>Ingredient 8</item>
-    </string-array>
-
-    <string-array name="directions">
-        <item>step 1</item>
-        <item>step 2</item>
-        <item>step 3</item>
-        <item>step 4</item>
-        <item>step 5</item>
-        <item>step 6</item>
-        <item>step 7</item>
-    </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    
 </resources>
