@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void runSearch(final String search) {
-        String diet = mSharedPreferences.getString(Constants.PREFERENE_DIET_KEY, "any");
+        String diet = mSharedPreferences.getString(currentUser.getUid(), "any");
         loading.setMessage(String.format("Searching for %s recipes...", search));
         loading.show();
         SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);

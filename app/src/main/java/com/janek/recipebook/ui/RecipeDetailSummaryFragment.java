@@ -149,6 +149,7 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
     public void saveRecipe(final boolean save) {
         final String recipeRef = String.format("%s/%d", Constants.FIREBASE_RECIPE_REF, recipe.getId());
         final String recipeSaveRef = String.format(Constants.FIREBASE_USER_RECIPES_REF, FirebaseAuth.getInstance().getCurrentUser().getUid(), recipe.getId());
+        // Add listener to recipe node to see if it already exists before saving it.
         rootRef.child(recipeRef).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(DataSnapshot dataSnapshot) {
 

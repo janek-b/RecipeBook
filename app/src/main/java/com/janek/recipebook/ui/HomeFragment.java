@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.jakewharton.rxbinding2.widget.RxAdapterView;
 import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
@@ -42,7 +43,8 @@ public class HomeFragment extends Fragment {
     private SharedPreferences.Editor mEditor;
     private String[] diets;
     private final CompositeDisposable disposable = new CompositeDisposable();
-
+    private FirebaseAuth mAuth;
+    private String uid;
 
     @Nullable
     @Override
@@ -54,6 +56,8 @@ public class HomeFragment extends Fragment {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mEditor = mSharedPreferences.edit();
         diets = getResources().getStringArray(R.array.diets);
+        mAuth = FirebaseAuth.getInstance();
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         return view;
     }
 
@@ -69,11 +73,11 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ArrayAdapter dietAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.diets, android.R.layout.simple_spinner_item);
         mDietSelector.setAdapter(dietAdapter);
-        mDietSelector.setSelection(Arrays.asList(diets).indexOf(mSharedPreferences.getString(Constants.PREFERENE_DIET_KEY, "any")));
+        mDietSelector.setSelection(Arrays.asList(diets).indexOf(mSharedPreferences.getString(uid, "any")));
 
-        disposable.add(RxAdapterView.itemSelections(mDietSelector).subscribe(new Consumer<Integer>() {
+        disposable.add(RxAdapterView.itemSelections(mDietSelector).skipInitialValue().subscribe(new Consumer<Integer>() {
             @Override public void accept(@NonNull Integer i) throws Exception {
-                mEditor.putString(Constants.PREFERENE_DIET_KEY, diets[i]).apply();
+                mEditor.putString(uid, diets[i]).apply();
             }
         }));
 
