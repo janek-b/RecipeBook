@@ -2,8 +2,10 @@ package com.janek.recipebook.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 300;
     private ProgressDialog loading;
+    private SharedPreferences mSharedPreferences;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -103,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
         fragmentManager = getSupportFragmentManager();
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -172,10 +176,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void runSearch(final String search) {
+        String diet = mSharedPreferences.getString(Constants.PREFERENE_DIET_KEY, "any");
         loading.setMessage(String.format("Searching for %s recipes...", search));
         loading.show();
         SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-        disposable.add(spoonClient.searchRecipes(search).subscribeWith(new DisposableObserver<RecipeListResponse>() {
+        Observable<RecipeListResponse> searchObservable;
+        if (diet.equals("any")) searchObservable = spoonClient.searchRecipes(search);
+        else searchObservable = spoonClient.searchDietRecipes(search, diet);
+
+        disposable.add(searchObservable.subscribeWith(new DisposableObserver<RecipeListResponse>() {
             @Override public void onNext(@NonNull RecipeListResponse recipeListResponse) {
                 loadNavFragment(RecipeListFragment.newInstance(recipeListResponse, search));
                 loading.dismiss();

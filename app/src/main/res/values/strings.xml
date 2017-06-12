@@ -17,9 +17,10 @@
 
 
     <string-array name="diets">
+        <item>any</item>
         <item>pescetarian</item>
         <item>vegan</item>
         <item>vegetarian</item>
     </string-array>
-    
+
 </resources>

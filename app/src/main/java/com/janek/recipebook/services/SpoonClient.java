@@ -18,6 +18,9 @@ public interface SpoonClient {
     @GET("/recipes/search?instructionsRequired=true")
     Observable<RecipeListResponse> searchRecipes(@Query("query") String query);
 
+    @GET("/recipes/search?instructionsRequired=true")
+    Observable<RecipeListResponse> searchDietRecipes(@Query("query") String query, @Query("diet") String diet);
+
     @GET("/recipes/{recipeId}/information?includeNutrition=false")
     Observable<Recipe> getRecipe(@Path("recipeId") int recipeId);
 
