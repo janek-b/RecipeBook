@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.Instruction;
@@ -116,42 +117,75 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         disableCollapse();
 
         // Listen for fragment changes and update selected nav item
-        fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override public void onBackStackChanged() {
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if (fragment instanceof HomeFragment) {
-                    disableCollapse();
-                    navigationView.setCheckedItem(R.id.nav_home);
-                } else if (fragment instanceof AboutFragment) {
-                    disableCollapse();
-                    navigationView.setCheckedItem(R.id.nav_about);
-                } else if (fragment instanceof SavedRecipeListFragment) {
-                    disableCollapse();
-                    navigationView.setCheckedItem(R.id.nav_saved_recipes);
-                } else if (fragment instanceof RecipeDetailFragment) {
-                    enableCollapse();
-                } else {
-                    disableCollapse();
-                }
+        fragmentManager.addOnBackStackChangedListener(() -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            if (fragment instanceof HomeFragment) {
+                disableCollapse();
+                navigationView.setCheckedItem(R.id.nav_home);
+            } else if (fragment instanceof AboutFragment) {
+                disableCollapse();
+                navigationView.setCheckedItem(R.id.nav_about);
+            } else if (fragment instanceof SavedRecipeListFragment) {
+                disableCollapse();
+                navigationView.setCheckedItem(R.id.nav_saved_recipes);
+            } else if (fragment instanceof RecipeDetailFragment) {
+                enableCollapse();
+            } else {
+                disableCollapse();
             }
         });
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override public void onAuthStateChanged(@android.support.annotation.NonNull FirebaseAuth firebaseAuth) {
-                currentUser = firebaseAuth.getCurrentUser();
-                if (currentUser != null) {
-                    // update nav header
-                    userProfileName.setText(currentUser.getDisplayName());
-                    Picasso.with(MainActivity.this).load(currentUser.getPhotoUrl()).resize(100, 100).centerCrop().into(userProfileImg);
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
-                } else {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
+//        fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+//            @Override public void onBackStackChanged() {
+//                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+//                if (fragment instanceof HomeFragment) {
+//                    disableCollapse();
+//                    navigationView.setCheckedItem(R.id.nav_home);
+//                } else if (fragment instanceof AboutFragment) {
+//                    disableCollapse();
+//                    navigationView.setCheckedItem(R.id.nav_about);
+//                } else if (fragment instanceof SavedRecipeListFragment) {
+//                    disableCollapse();
+//                    navigationView.setCheckedItem(R.id.nav_saved_recipes);
+//                } else if (fragment instanceof RecipeDetailFragment) {
+//                    enableCollapse();
+//                } else {
+//                    disableCollapse();
+//                }
+//            }
+//        });
+
+        mAuthListener = firebaseAuth -> {
+            currentUser = firebaseAuth.getCurrentUser();
+            if (currentUser != null) {
+                // update nav header
+                userProfileName.setText(currentUser.getDisplayName());
+                Picasso.with(MainActivity.this).load(currentUser.getPhotoUrl()).resize(100, 100).centerCrop().into(userProfileImg);
+                fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+            } else {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
         };
+
+//        mAuthListener = new FirebaseAuth.AuthStateListener() {
+//            @Override public void onAuthStateChanged(@android.support.annotation.NonNull FirebaseAuth firebaseAuth) {
+//                currentUser = firebaseAuth.getCurrentUser();
+//                if (currentUser != null) {
+//                    // update nav header
+//                    userProfileName.setText(currentUser.getDisplayName());
+//                    Picasso.with(MainActivity.this).load(currentUser.getPhotoUrl()).resize(100, 100).centerCrop().into(userProfileImg);
+//                    fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+//                } else {
+//                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(intent);
+//                    finish();
+//                }
+//            }
+//        };
     }
 
     @Override
@@ -198,22 +232,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loading.setMessage("Getting recipe Details...");
         loading.show();
         SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
-        disposable.add(Observable.combineLatest(spoonClient.getRecipe(id), spoonClient.getInstructions(id), new BiFunction<Recipe, List<Instruction>, Recipe>() {
-            @Override public Recipe apply(@NonNull Recipe recipe, @NonNull List<Instruction> instructions) throws Exception {
-                recipe.setFullInstructions(instructions);
-                return recipe;
-            }
+        disposable.add(Observable.zip(spoonClient.getRecipe(id), spoonClient.getInstructions(id), (Recipe recipe, List<Instruction> instructions) -> {
+            recipe.setFullInstructions(instructions);
+            return recipe;
         }).subscribeWith(new DisposableObserver<Recipe>() {
             @Override public void onNext(@NonNull final Recipe recipe) {
                 rootRef.child(String.format(Constants.FIREBASE_USER_RECIPES_REF, currentUser.getUid(), recipe.getId()))
                         .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override public void onDataChange(DataSnapshot dataSnapshot) {
-                        loadFragment(RecipeDetailFragment.newInstance(recipe, dataSnapshot.exists()));
-                        loading.dismiss();
-                    }
-                    @Override public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+                            @Override public void onDataChange(DataSnapshot dataSnapshot) {
+                                loadFragment(RecipeDetailFragment.newInstance(recipe, dataSnapshot.exists()));
+                                loading.dismiss();
+                            }
+                            @Override public void onCancelled(DatabaseError databaseError) {}
+                        });
             }
             @Override public void onError(@NonNull Throwable e) {e.printStackTrace();}
             @Override public void onComplete() {}
@@ -270,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final MenuItem menuItem = menu.findItem(R.id.action_search);
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
                 runSearch(query);

@@ -66,34 +66,49 @@ public class CreateAccountActivity extends AppCompatActivity {
         Observable<CharSequence> passwordObservable = RxTextView.textChanges(passwordEditText).skipInitialValue();
         Observable<CharSequence> confirmObservable = RxTextView.textChanges(confirmEditText).skipInitialValue();
 
-        disposable.add(Observable.combineLatest(nameObservable, emailObservable, passwordObservable, confirmObservable, new Function4<CharSequence, CharSequence, CharSequence, CharSequence, Boolean>() {
-            @Override
-            public Boolean apply(@NonNull CharSequence nameInput, @NonNull CharSequence emailInput, @NonNull CharSequence passwordInput, @NonNull CharSequence confirmInput) throws Exception {
-                boolean goodName = isValidName(nameInput.toString().trim());
-                boolean goodEmail = isValidEmail(emailInput.toString().trim());
-                boolean goodPassword = isValidPassword(passwordInput.toString().trim(), confirmInput.toString().trim());
-                return goodName && goodEmail && goodPassword;
-            }
-        }).subscribe(new Consumer<Boolean>() {
-            @Override public void accept(@NonNull Boolean valid) throws Exception {
-                signUpButton.setEnabled(valid);
-            }
-        }));
+//        disposable.add(Observable.combineLatest(nameObservable, emailObservable, passwordObservable, confirmObservable, new Function4<CharSequence, CharSequence, CharSequence, CharSequence, Boolean>() {
+//            @Override
+//            public Boolean apply(@NonNull CharSequence nameInput, @NonNull CharSequence emailInput, @NonNull CharSequence passwordInput, @NonNull CharSequence confirmInput) throws Exception {
+//                boolean goodName = isValidName(nameInput.toString().trim());
+//                boolean goodEmail = isValidEmail(emailInput.toString().trim());
+//                boolean goodPassword = isValidPassword(passwordInput.toString().trim(), confirmInput.toString().trim());
+//                return goodName && goodEmail && goodPassword;
+//            }
+//        }).subscribe(new Consumer<Boolean>() {
+//            @Override public void accept(@NonNull Boolean valid) throws Exception {
+//                signUpButton.setEnabled(valid);
+//            }
+//        }));
 
+        disposable.add(Observable.combineLatest(nameObservable, emailObservable, passwordObservable, confirmObservable, (nameInput, emailInput, passwordInput, confirmInput) -> {
+            boolean goodName = isValidName(nameInput.toString().trim());
+            boolean goodEmail = isValidEmail(emailInput.toString().trim());
+            boolean goodPassword = isValidPassword(passwordInput.toString().trim(), confirmInput.toString().trim());
+            return goodName && goodEmail && goodPassword;
+        }).subscribe(valid -> signUpButton.setEnabled(valid)));
 
-        disposable.add(RxView.clicks(signUpButton).subscribe(new Consumer<Object>() {
-            @Override public void accept(@NonNull Object o) throws Exception {
-                createNewUser();
-            }
-        }));
+//        disposable.add(RxView.clicks(signUpButton).subscribe(new Consumer<Object>() {
+//            @Override public void accept(@NonNull Object o) throws Exception {
+//                createNewUser();
+//            }
+//        }));
 
-        disposable.add(RxView.clicks(loginButton).subscribe(new Consumer<Object>() {
-            @Override public void accept(@NonNull Object o) throws Exception {
-                Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
+        disposable.add(RxView.clicks(signUpButton).subscribe(event -> createNewUser()));
+
+//        disposable.add(RxView.clicks(loginButton).subscribe(new Consumer<Object>() {
+//            @Override public void accept(@NonNull Object o) throws Exception {
+//                Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(intent);
+//                finish();
+//            }
+//        }));
+
+        disposable.add(RxView.clicks(loginButton).subscribe(event -> {
+            Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         }));
     }
 
@@ -137,13 +152,21 @@ public class CreateAccountActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString().trim();
         mAuthProgressDialog.show();
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    updateUserProfile(task.getResult().getUser());
-                } else {
-                    Toast.makeText(CreateAccountActivity.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
-                }
+//        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
+//                if (task.isSuccessful()) {
+//                    updateUserProfile(task.getResult().getUser());
+//                } else {
+//                    Toast.makeText(CreateAccountActivity.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                updateUserProfile(task.getResult().getUser());
+            } else {
+                Toast.makeText(CreateAccountActivity.this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -154,15 +177,25 @@ public class CreateAccountActivity extends AppCompatActivity {
                 .setPhotoUri(Uri.parse(Constants.DEFAULT_IMG_URL))
                 .build();
 
-        user.updateProfile(profileUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override public void onComplete(@android.support.annotation.NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    mAuthProgressDialog.dismiss();
-                    Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
+//        user.updateProfile(profileUpdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override public void onComplete(@android.support.annotation.NonNull Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    mAuthProgressDialog.dismiss();
+//                    Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(intent);
+//                    finish();
+//                }
+//            }
+//        });
+
+        user.updateProfile(profileUpdate).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                mAuthProgressDialog.dismiss();
+                Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
         });
 

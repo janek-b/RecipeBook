@@ -32,6 +32,10 @@ android {
     buildTypes.each {
         it.buildConfigField 'String', 'SPOON_KEY', SpoonKey
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -68,3 +72,4 @@ dependencies {
     annotationProcessor 'org.parceler:parceler:1.1.6'
 }
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'me.tatarka.retrolambda'

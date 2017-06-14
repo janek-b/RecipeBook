@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxAdapterView;
 import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
@@ -43,7 +44,6 @@ public class HomeFragment extends Fragment {
     private SharedPreferences.Editor mEditor;
     private String[] diets;
     private final CompositeDisposable disposable = new CompositeDisposable();
-    private FirebaseAuth mAuth;
     private String uid;
 
     @Nullable
@@ -56,7 +56,6 @@ public class HomeFragment extends Fragment {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mEditor = mSharedPreferences.edit();
         diets = getResources().getStringArray(R.array.diets);
-        mAuth = FirebaseAuth.getInstance();
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         return view;
     }
@@ -75,25 +74,37 @@ public class HomeFragment extends Fragment {
         mDietSelector.setAdapter(dietAdapter);
         mDietSelector.setSelection(Arrays.asList(diets).indexOf(mSharedPreferences.getString(uid, "any")));
 
-        disposable.add(RxAdapterView.itemSelections(mDietSelector).skipInitialValue().subscribe(new Consumer<Integer>() {
-            @Override public void accept(@NonNull Integer i) throws Exception {
-                mEditor.putString(uid, diets[i]).apply();
-            }
-        }));
+        disposable.add(RxAdapterView.itemSelections(mDietSelector).skipInitialValue().subscribe(i -> mEditor.putString(uid, diets[i]).apply()));
+
+//        disposable.add(RxAdapterView.itemSelections(mDietSelector).skipInitialValue().subscribe(new Consumer<Integer>() {
+//            @Override public void accept(@NonNull Integer i) throws Exception {
+//                mEditor.putString(uid, diets[i]).apply();
+//            }
+//        }));
 
         ((MainActivity)getActivity()).setToolbarTitle("Recipe Book");
 
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String searchInput = mSearchField.getText().toString();
-                if (searchInput.equals("")) {
-                    Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
-                } else {
-                    mSearchField.setText("");
-                    ((MainActivity)getActivity()).runSearch(searchInput);
-                }
+        disposable.add(RxView.clicks(mSearchButton).subscribe(event -> {
+            String searchInput = mSearchField.getText().toString();
+            if (searchInput.equals("")) {
+                Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
+            } else {
+                mSearchField.setText("");
+                ((MainActivity)getActivity()).runSearch(searchInput);
             }
-        });
+        }));
+
+//        mSearchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String searchInput = mSearchField.getText().toString();
+//                if (searchInput.equals("")) {
+//                    Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
+//                } else {
+//                    mSearchField.setText("");
+//                    ((MainActivity)getActivity()).runSearch(searchInput);
+//                }
+//            }
+//        });
     }
 }

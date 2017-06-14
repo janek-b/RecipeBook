@@ -41,11 +41,12 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
-public class RecipeDetailSummaryFragment extends Fragment implements View.OnClickListener {
+public class RecipeDetailSummaryFragment extends Fragment {
     @BindView(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
     @BindView(R.id.recipe_detail_servings) TextView servingsTextView;
     @BindView(R.id.ingredients_label) TextView ingredientsLabel;
@@ -95,15 +96,9 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
         setVisibility(veganIcon, recipe.isVegan());
         setVisibility(vegetarianIcon, recipe.isVegetarian());
 
-        websiteTextView.setOnClickListener(this);
-
-        savedButton.setChecked(userSaved);
-
-        disposable.add(RxCompoundButton.checkedChanges(savedButton).skipInitialValue().subscribe(new Consumer<Boolean>() {
-            @Override public void accept(@NonNull Boolean save) throws Exception {
-                saveRecipe(save);
-            }
-        }));
+        disposable.add(Observable.just(userSaved).subscribe(savedButton::setChecked));
+        disposable.add(RxView.clicks(websiteTextView).subscribe(event -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(recipe.getSourceUrl())))));
+        disposable.add(RxCompoundButton.checkedChanges(savedButton).skipInitialValue().subscribe(this::saveRecipe));
 
         return view;
     }
@@ -137,15 +132,6 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
         }
     }
 
-
-    @Override
-    public void onClick(View v) {
-        if (v == websiteTextView) {
-            Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(recipe.getSourceUrl()));
-            startActivity(webIntent);
-        }
-    }
-
     public void saveRecipe(final boolean save) {
         final String recipeRef = String.format("%s/%d", Constants.FIREBASE_RECIPE_REF, recipe.getId());
         final String recipeSaveRef = String.format(Constants.FIREBASE_USER_RECIPES_REF, FirebaseAuth.getInstance().getCurrentUser().getUid(), recipe.getId());
@@ -157,11 +143,9 @@ public class RecipeDetailSummaryFragment extends Fragment implements View.OnClic
                 if (!dataSnapshot.exists()) updates.put(recipeRef, recipe);
                 updates.put(recipeSaveRef, (save ? save : null));
 
-                rootRef.updateChildren(updates).addOnCompleteListener(new OnCompleteListener() {
-                    @Override public void onComplete(@android.support.annotation.NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), save ? "Recipe Saved!" : "Recipe Removed!", Toast.LENGTH_SHORT).show();
-                        }
+                rootRef.updateChildren(updates).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getActivity(), save ? "Recipe Saved!" : "Recipe Removed!", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
