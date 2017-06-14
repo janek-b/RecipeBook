@@ -3,6 +3,7 @@ package com.janek.recipebook.services;
 import com.janek.recipebook.models.Instruction;
 import com.janek.recipebook.models.Recipe;
 import com.janek.recipebook.models.RecipeListResponse;
+import com.janek.recipebook.models.RecipeSearchSuggestion;
 
 import java.util.List;
 
@@ -26,6 +27,9 @@ public interface SpoonClient {
 
     @GET("/recipes/{recipeId}/analyzedInstructions?stepBreakdown=true")
     Observable<List<Instruction>> getInstructions(@Path("recipeId") int recipeId);
+
+    @GET("/recipes/autocomplete?number=10")
+    Observable<List<RecipeSearchSuggestion>> getSearchSuggestion(@Query("query") String query);
 
     //TODO add random joke api call
 }

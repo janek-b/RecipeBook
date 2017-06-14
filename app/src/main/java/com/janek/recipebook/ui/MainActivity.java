@@ -1,6 +1,7 @@
 package com.janek.recipebook.ui;
 
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -46,6 +48,7 @@ import com.janek.recipebook.R;
 import com.janek.recipebook.models.Instruction;
 import com.janek.recipebook.models.Recipe;
 import com.janek.recipebook.models.RecipeListResponse;
+import com.janek.recipebook.models.RecipeSearchSuggestion;
 import com.janek.recipebook.services.SpoonClient;
 import com.janek.recipebook.services.SpoonService;
 import com.squareup.picasso.Picasso;
@@ -92,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser currentUser;
     private FragmentManager fragmentManager;
+    private SpoonClient spoonClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rootRef = FirebaseDatabase.getInstance().getReference();
         fragmentManager = getSupportFragmentManager();
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        spoonClient = SpoonService.createService(SpoonClient.class);
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -186,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String diet = mSharedPreferences.getString(currentUser.getUid(), "any");
         loading.setMessage(String.format("Searching for %s recipes...", search));
         loading.show();
-        SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
+//        SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
         Observable<RecipeListResponse> searchObservable;
         if (diet.equals("any")) searchObservable = spoonClient.searchRecipes(search);
         else searchObservable = spoonClient.searchDietRecipes(search, diet);
@@ -204,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void getRecipe(int id) {
         loading.setMessage("Getting recipe Details...");
         loading.show();
-        SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
+//        SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
         disposable.add(Observable.zip(spoonClient.getRecipe(id), spoonClient.getInstructions(id), (Recipe recipe, List<Instruction> instructions) -> {
             recipe.setFullInstructions(instructions);
             return recipe;
@@ -279,6 +284,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ArrayAdapter<String> suggestionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         searchAutoComplete.setAdapter(suggestionAdapter);
+        
+        searchAutoComplete.setDropDownBackgroundDrawable(ContextCompat.getDrawable(this, R.color.colorPrimaryLight));
+
         disposable.add(RxAutoCompleteTextView.itemClickEvents(searchAutoComplete).subscribe(event -> {
             Log.d("test", "click" + suggestionAdapter.getItem(event.position()));
         }));
@@ -287,12 +295,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         disposable.add(searchObs.debounce(400, TimeUnit.MILLISECONDS)
                 .map(searchViewQueryTextEvent -> searchViewQueryTextEvent.queryText().toString())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                // network call for search suggestions goes here
+                .switchMap(spoonClient::getSearchSuggestion)
+                .flatMap(suggestions -> Observable.fromIterable(suggestions)
+                        .map(RecipeSearchSuggestion::getTitle)
+                        .toList()
+                        .toObservable()
+                )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(searchInput -> {
-                    Log.d("test", searchInput);
+                    Log.d("test", searchInput.toString());
                     suggestionAdapter.clear();
                     suggestionAdapter.addAll(searchInput);
+                    suggestionAdapter.getFilter().filter(searchAutoComplete.getText(), searchAutoComplete);
                 }));
 
         disposable.add(searchObs.subscribe(searchViewQueryTextEvent -> {
