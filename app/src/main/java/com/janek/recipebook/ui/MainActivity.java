@@ -191,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String diet = mSharedPreferences.getString(currentUser.getUid(), "any");
         loading.setMessage(String.format("Searching for %s recipes...", search));
         loading.show();
-//        SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
         Observable<RecipeListResponse> searchObservable;
         if (diet.equals("any")) searchObservable = spoonClient.searchRecipes(search);
         else searchObservable = spoonClient.searchDietRecipes(search, diet);
@@ -209,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void getRecipe(int id) {
         loading.setMessage("Getting recipe Details...");
         loading.show();
-//        SpoonClient spoonClient = SpoonService.createService(SpoonClient.class);
         disposable.add(Observable.zip(spoonClient.getRecipe(id), spoonClient.getInstructions(id), (Recipe recipe, List<Instruction> instructions) -> {
             recipe.setFullInstructions(instructions);
             return recipe;
@@ -228,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override public void onComplete() {}
         }));
     }
-
 
     public void disableCollapse() {
         recipeImgBackdrop.setVisibility(View.GONE);
@@ -276,21 +273,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
-
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-
         Observable<SearchViewQueryTextEvent> searchObs = RxSearchView.queryTextChangeEvents(searchView).share();
 
+        SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         ArrayAdapter<String> suggestionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         searchAutoComplete.setAdapter(suggestionAdapter);
-        
         searchAutoComplete.setDropDownBackgroundDrawable(ContextCompat.getDrawable(this, R.color.colorPrimaryLight));
 
-        disposable.add(RxAutoCompleteTextView.itemClickEvents(searchAutoComplete).subscribe(event -> {
-            Log.d("test", "click" + suggestionAdapter.getItem(event.position()));
-        }));
-
+        disposable.add(RxAutoCompleteTextView.itemClickEvents(searchAutoComplete)
+                .subscribe(event -> searchView.setQuery(suggestionAdapter.getItem(event.position()), true)));
 
         disposable.add(searchObs.debounce(400, TimeUnit.MILLISECONDS)
                 .map(searchViewQueryTextEvent -> searchViewQueryTextEvent.queryText().toString())
@@ -300,8 +292,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .map(RecipeSearchSuggestion::getTitle)
                         .toList()
                         .toObservable()
-                )
-                .observeOn(AndroidSchedulers.mainThread())
+                ).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(searchInput -> {
                     Log.d("test", searchInput.toString());
                     suggestionAdapter.clear();
