@@ -23,6 +23,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,8 +36,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jakewharton.rxbinding2.support.v4.view.RxMenuItemCompat;
+import com.jakewharton.rxbinding2.support.v7.widget.RxActionMenuView;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding2.support.v7.widget.SearchViewQueryTextEvent;
+import com.jakewharton.rxbinding2.widget.RxAutoCompleteTextView;
 import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.Instruction;
@@ -46,6 +52,7 @@ import com.squareup.picasso.Picasso;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -260,21 +267,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    // Tool bar right menu items handled here. Add search bar here to make it available on all pages.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
         Observable<SearchViewQueryTextEvent> searchObs = RxSearchView.queryTextChangeEvents(searchView).share();
+
+        ArrayAdapter<String> suggestionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
+        searchAutoComplete.setAdapter(suggestionAdapter);
+        disposable.add(RxAutoCompleteTextView.itemClickEvents(searchAutoComplete).subscribe(event -> {
+            Log.d("test", "click" + suggestionAdapter.getItem(event.position()));
+        }));
+
 
         disposable.add(searchObs.debounce(400, TimeUnit.MILLISECONDS)
                 .map(searchViewQueryTextEvent -> searchViewQueryTextEvent.queryText().toString())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 // network call for search suggestions goes here
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(searchInput -> Log.d("test", searchInput)));
+                .subscribe(searchInput -> {
+                    Log.d("test", searchInput);
+                    suggestionAdapter.clear();
+                    suggestionAdapter.addAll(searchInput);
+                }));
 
         disposable.add(searchObs.subscribe(searchViewQueryTextEvent -> {
                     if (searchViewQueryTextEvent.isSubmitted()) {
