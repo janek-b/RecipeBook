@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.rxbinding2.support.v7.widget.RxSearchView;
+import com.jakewharton.rxbinding2.support.v7.widget.SearchViewQueryTextEvent;
 import com.janek.recipebook.Constants;
 import com.janek.recipebook.R;
 import com.janek.recipebook.models.Instruction;
@@ -46,10 +47,12 @@ import com.squareup.picasso.Picasso;
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.BiFunction;
@@ -135,26 +138,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-//        fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-//            @Override public void onBackStackChanged() {
-//                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-//                if (fragment instanceof HomeFragment) {
-//                    disableCollapse();
-//                    navigationView.setCheckedItem(R.id.nav_home);
-//                } else if (fragment instanceof AboutFragment) {
-//                    disableCollapse();
-//                    navigationView.setCheckedItem(R.id.nav_about);
-//                } else if (fragment instanceof SavedRecipeListFragment) {
-//                    disableCollapse();
-//                    navigationView.setCheckedItem(R.id.nav_saved_recipes);
-//                } else if (fragment instanceof RecipeDetailFragment) {
-//                    enableCollapse();
-//                } else {
-//                    disableCollapse();
-//                }
-//            }
-//        });
-
         mAuthListener = firebaseAuth -> {
             currentUser = firebaseAuth.getCurrentUser();
             if (currentUser != null) {
@@ -169,23 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
             }
         };
-
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override public void onAuthStateChanged(@android.support.annotation.NonNull FirebaseAuth firebaseAuth) {
-//                currentUser = firebaseAuth.getCurrentUser();
-//                if (currentUser != null) {
-//                    // update nav header
-//                    userProfileName.setText(currentUser.getDisplayName());
-//                    Picasso.with(MainActivity.this).load(currentUser.getPhotoUrl()).resize(100, 100).centerCrop().into(userProfileImg);
-//                    fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
-//                } else {
-//                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//            }
-//        };
     }
 
     @Override
@@ -298,20 +264,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        final MenuItem menuItem = menu.findItem(R.id.action_search);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        Observable<SearchViewQueryTextEvent> searchObs = RxSearchView.queryTextChangeEvents(searchView).share();
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override public boolean onQueryTextSubmit(String query) {
-                runSearch(query);
-                MenuItemCompat.collapseActionView(menuItem);
-                return false;
-            }
-            @Override public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+        disposable.add(searchObs.debounce(400, TimeUnit.MILLISECONDS)
+                .map(searchViewQueryTextEvent -> searchViewQueryTextEvent.queryText().toString())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                // network call for search suggestions goes here
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(searchInput -> Log.d("test", searchInput)));
+
+        disposable.add(searchObs.subscribe(searchViewQueryTextEvent -> {
+                    if (searchViewQueryTextEvent.isSubmitted()) {
+                        runSearch(searchViewQueryTextEvent.queryText().toString());
+                        MenuItemCompat.collapseActionView(menuItem);
+                    }
+                }));
         return true;
     }
 
