@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        Observable<SearchViewQueryTextEvent> searchObs = RxSearchView.queryTextChangeEvents(searchView).share();
+        Observable<SearchViewQueryTextEvent> searchObs = RxSearchView.queryTextChangeEvents(searchView).skipInitialValue().share();
 
         SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         ArrayAdapter<String> suggestionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
@@ -294,7 +294,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .toObservable()
                 ).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(searchInput -> {
-                    Log.d("test", searchInput.toString());
                     suggestionAdapter.clear();
                     suggestionAdapter.addAll(searchInput);
                     suggestionAdapter.getFilter().filter(searchAutoComplete.getText(), searchAutoComplete);
