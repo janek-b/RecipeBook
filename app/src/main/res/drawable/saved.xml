@@ -16,18 +16,21 @@
         android:toId="@id/star_remove_state">
         <animated-vector android:drawable="@drawable/star_start">
             <target android:animation="@animator/animate_border_to_fill"
-                android:name="start">
-            </target>
+                    android:name="start"/>
+            <target android:animation="@animator/animate_spin"
+                    android:name="start_group"/>
         </animated-vector>
     </transition>
 
     <transition
         android:fromId="@id/star_remove_state"
-        android:toId="@id/star_save_state">
+        android:toId="@id/star_save_state"
+        android:reversible="true">
         <animated-vector android:drawable="@drawable/star_end">
             <target android:animation="@animator/animate_fill_to_border"
-                android:name="end">
-            </target>
+                    android:name="end"/>
+            <target android:animation="@animator/animate_spin"
+                    android:name="end_group"/>
         </animated-vector>
     </transition>
 
