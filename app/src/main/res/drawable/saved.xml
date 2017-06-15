@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="NewApi">
 
+    <item android:state_checked="false"
+          android:id="@+id/star_save_state"
+          android:drawable="@drawable/star_start"/>
 
-    <item android:state_checked="false" android:drawable="@drawable/ic_star_border_white_48dp"/>
-    <item android:state_checked="true" android:drawable="@drawable/ic_star_white_48dp"/>
-</selector>
+    <item android:state_checked="true"
+          android:id="@+id/star_remove_state"
+          android:drawable="@drawable/star_end"/>
+
+    <transition
+        android:fromId="@id/star_save_state"
+        android:toId="@id/star_remove_state">
+        <animated-vector android:drawable="@drawable/star_start">
+            <target android:animation="@animator/animate_border_to_fill"
+                android:name="start">
+            </target>
+        </animated-vector>
+    </transition>
+
+    <transition
+        android:fromId="@id/star_remove_state"
+        android:toId="@id/star_save_state">
+        <animated-vector android:drawable="@drawable/star_end">
+            <target android:animation="@animator/animate_fill_to_border"
+                android:name="end">
+            </target>
+        </animated-vector>
+    </transition>
+
+</animated-selector>

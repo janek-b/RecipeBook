@@ -2,10 +2,14 @@ package com.janek.recipebook.ui;
 
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,12 +81,6 @@ public class HomeFragment extends Fragment {
 
         disposable.add(RxAdapterView.itemSelections(mDietSelector).skipInitialValue().subscribe(i -> mEditor.putString(uid, diets[i]).apply()));
 
-//        disposable.add(RxAdapterView.itemSelections(mDietSelector).skipInitialValue().subscribe(new Consumer<Integer>() {
-//            @Override public void accept(@NonNull Integer i) throws Exception {
-//                mEditor.putString(uid, diets[i]).apply();
-//            }
-//        }));
-
         ((MainActivity)getActivity()).setToolbarTitle("Recipe Book");
 
         disposable.add(RxView.clicks(mSearchButton).subscribe(event -> {
@@ -93,18 +92,5 @@ public class HomeFragment extends Fragment {
                 ((MainActivity)getActivity()).runSearch(searchInput);
             }
         }));
-
-//        mSearchButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String searchInput = mSearchField.getText().toString();
-//                if (searchInput.equals("")) {
-//                    Toast.makeText(getActivity(), "No Search Input Provided", Toast.LENGTH_LONG).show();
-//                } else {
-//                    mSearchField.setText("");
-//                    ((MainActivity)getActivity()).runSearch(searchInput);
-//                }
-//            }
-//        });
     }
 }
