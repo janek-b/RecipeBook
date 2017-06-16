@@ -1,8 +1,10 @@
 package com.janek.recipebook.ui;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,7 +50,12 @@ public class RecipeListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         mRecipeList.setAdapter(new RecipeListAdapter(recipeResponse));
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            layoutManager = new GridLayoutManager(getActivity(), 2);
+        } else {
+            layoutManager = new LinearLayoutManager(getActivity());
+        }
         mRecipeList.setLayoutManager(layoutManager);
         mRecipeList.setHasFixedSize(true);
         mRecipeList.setNestedScrollingEnabled(false);

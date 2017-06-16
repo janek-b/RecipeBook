@@ -1,8 +1,10 @@
 package com.janek.recipebook.ui;
 
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,7 +31,7 @@ public class SavedRecipeListFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef;
     private FirebaseRecyclerAdapter mFirebaseAdapter;
-    @BindView(R.id.savedRecipeRecyclerView) RecyclerView savedRecipeRecyclerView;
+    @BindView(R.id.recipe_list) RecyclerView savedRecipeRecyclerView;
 
 
     public SavedRecipeListFragment() {
@@ -39,7 +41,7 @@ public class SavedRecipeListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_saved_recipe_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -55,7 +57,12 @@ public class SavedRecipeListFragment extends Fragment {
             }
         };
         savedRecipeRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            layoutManager = new GridLayoutManager(getActivity(), 2);
+        } else {
+            layoutManager = new LinearLayoutManager(getActivity());
+        }
         savedRecipeRecyclerView.setLayoutManager(layoutManager);
         savedRecipeRecyclerView.setAdapter(mFirebaseAdapter);
         return view;
