@@ -54,12 +54,14 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         @BindView(R.id.recipe_title) TextView title;
         @BindView(R.id.recipe_desc) TextView desc;
         @BindView(R.id.recipe_img) ImageView img;
+        @BindView(R.id.reorder_image) ImageView reorderImg;
 
         private Context mContext;
 
         public RecipeListViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            reorderImg.setVisibility(View.GONE);
             mContext = itemView.getContext();
             itemView.setOnClickListener(this);
         }

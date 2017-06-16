@@ -76,7 +76,7 @@ public class SavedRecipeListFragment extends Fragment implements OnStartDragList
         savedRecipeRecyclerView.setLayoutManager(layoutManager);
         savedRecipeRecyclerView.setHasFixedSize(true);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(firebaseRecipeListAdapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(firebaseRecipeListAdapter, getActivity());
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(savedRecipeRecyclerView);
 

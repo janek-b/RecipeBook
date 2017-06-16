@@ -29,6 +29,7 @@ public class FirebaseRecipeListViewHolder extends RecyclerView.ViewHolder implem
     @BindView(R.id.recipe_title) TextView title;
     @BindView(R.id.recipe_desc) TextView desc;
     @BindView(R.id.recipe_img) ImageView img;
+    @BindView(R.id.reorder_image) ImageView reorderImg;
 
     View mView;
     Context mContext;

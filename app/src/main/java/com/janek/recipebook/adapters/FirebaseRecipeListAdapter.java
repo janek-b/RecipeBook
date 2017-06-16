@@ -51,7 +51,7 @@ public class FirebaseRecipeListAdapter extends FirebaseIndexRecyclerAdapter<Reci
     @Override
     protected void populateViewHolder(FirebaseRecipeListViewHolder viewHolder, Recipe model, int position) {
         viewHolder.bindRecipe(model);
-        viewHolder.img.setOnTouchListener((View v, MotionEvent event) -> {
+        viewHolder.reorderImg.setOnTouchListener((View v, MotionEvent event) -> {
             if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
                 onStartDragListener.onStartDrag(viewHolder);
             }

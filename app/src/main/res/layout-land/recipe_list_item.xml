@@ -122,6 +122,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.93"/>
 
+        <ImageView
+            android:id="@+id/reorder_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_reorder_white_24dp"/>
+
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
