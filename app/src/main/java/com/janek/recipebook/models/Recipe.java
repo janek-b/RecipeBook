@@ -25,6 +25,7 @@ public class Recipe {
     String image;
     String instructions;
     List<Instruction> fullInstructions = new ArrayList<>();
+//    String index;
 
     public void setFullInstructions(List<Instruction> fullInstructions) {
         this.fullInstructions = fullInstructions;
@@ -46,6 +47,7 @@ public class Recipe {
         this.image = image;
         this.instructions = instructions;
         this.fullInstructions = fullInstructions;
+//        this.index = "not_specified";
     }
 
     public boolean isVegetarian() {
@@ -97,4 +99,12 @@ public class Recipe {
     }
 
     public List<Instruction> getFullInstructions() { return fullInstructions; }
+
+//    public String getIndex() {
+//        return index;
+//    }
+//
+//    public void setIndex(String index) {
+//        this.index = index;
+//    }
 }
