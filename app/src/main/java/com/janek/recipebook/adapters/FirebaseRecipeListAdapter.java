@@ -8,8 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.firebase.ui.database.FirebaseIndexRecyclerAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,12 +19,7 @@ import com.janek.recipebook.util.OnStartDragListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-/**
- * Created by janek on 6/16/17.
- */
 
 public class FirebaseRecipeListAdapter extends FirebaseIndexRecyclerAdapter<Recipe, FirebaseRecipeListViewHolder> implements ItemTouchHelperAdapter {
     private DatabaseReference savedRecipeRef;

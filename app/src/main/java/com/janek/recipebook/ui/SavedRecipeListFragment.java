@@ -3,6 +3,7 @@ package com.janek.recipebook.ui;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,8 +41,6 @@ public class SavedRecipeListFragment extends Fragment implements OnStartDragList
     private FirebaseRecipeListAdapter firebaseRecipeListAdapter;
     private ItemTouchHelper itemTouchHelper;
 
-    private FirebaseRecyclerAdapter mFirebaseAdapter;
-
     @BindView(R.id.recipe_list) RecyclerView savedRecipeRecyclerView;
 
 
@@ -49,32 +48,24 @@ public class SavedRecipeListFragment extends Fragment implements OnStartDragList
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        String userRecipes = String.format(Constants.FIREBASE_USER_RECIPES_LIST_REF, mAuth.getCurrentUser().getUid());
+        savedRecipeRef = rootRef.child(userRecipes).orderByValue();
+        recipeRef = rootRef.child(Constants.FIREBASE_RECIPE_REF);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe_list, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mAuth = FirebaseAuth.getInstance();
-        rootRef = FirebaseDatabase.getInstance().getReference();
-        String userRecipes = String.format(Constants.FIREBASE_USER_RECIPES_LIST_REF, mAuth.getCurrentUser().getUid());
-//        savedRecipeRef = rootRef.child(userRecipes);
-        savedRecipeRef = rootRef.child(userRecipes).orderByValue();
-        recipeRef = rootRef.child(Constants.FIREBASE_RECIPE_REF);
-
-//        mFirebaseAdapter = new FirebaseIndexRecyclerAdapter<Recipe, FirebaseRecipeListViewHolder>(Recipe.class,
-//                R.layout.recipe_list_item, FirebaseRecipeListViewHolder.class, savedRecipeRef, recipeRef) {
-//            @Override
-//            protected void populateViewHolder(FirebaseRecipeListViewHolder viewHolder, Recipe model, int position) {
-//                viewHolder.bindRecipe(model);
-//            }
-//        };
-//        savedRecipeRecyclerView.setAdapter(mFirebaseAdapter);
 
         firebaseRecipeListAdapter = new FirebaseRecipeListAdapter(Recipe.class, R.layout.recipe_list_item, FirebaseRecipeListViewHolder.class, savedRecipeRef, recipeRef, this, getActivity());
 
         savedRecipeRecyclerView.setAdapter(firebaseRecipeListAdapter);
-
-
 
         RecyclerView.LayoutManager layoutManager;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
