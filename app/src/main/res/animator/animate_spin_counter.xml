@@ -3,7 +3,8 @@
     <objectAnimator
         android:propertyName="rotation"
         android:valueFrom="0"
-        android:valueTo="-144"
+        android:valueTo="144"
+
         android:duration="600"
         android:interpolator="@android:anim/anticipate_overshoot_interpolator"/>
 </set>

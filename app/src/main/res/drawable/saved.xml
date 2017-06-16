@@ -4,28 +4,27 @@
     tools:ignore="NewApi">
 
     <item android:state_checked="false"
-          android:id="@+id/star_save_state"
+          android:id="@+id/star_remove_state"
           android:drawable="@drawable/star_start"/>
 
     <item android:state_checked="true"
-          android:id="@+id/star_remove_state"
+          android:id="@+id/star_save_state"
           android:drawable="@drawable/star_end"/>
 
     <transition
-        android:fromId="@id/star_save_state"
-        android:toId="@id/star_remove_state">
+        android:fromId="@id/star_remove_state"
+        android:toId="@id/star_save_state">
         <animated-vector android:drawable="@drawable/star_start">
             <target android:animation="@animator/animate_border_to_fill"
                     android:name="start"/>
-            <target android:animation="@animator/animate_spin"
+            <target android:animation="@animator/animate_spin_counter"
                     android:name="start_group"/>
         </animated-vector>
     </transition>
 
     <transition
-        android:fromId="@id/star_remove_state"
-        android:toId="@id/star_save_state"
-        android:reversible="true">
+        android:fromId="@id/star_save_state"
+        android:toId="@id/star_remove_state">
         <animated-vector android:drawable="@drawable/star_end">
             <target android:animation="@animator/animate_fill_to_border"
                     android:name="end"/>

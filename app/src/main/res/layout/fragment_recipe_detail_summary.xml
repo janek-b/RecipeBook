@@ -78,9 +78,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/recipe_detail_servings"
                     android:background="@drawable/saved"
-                    android:checked="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:textOff=""
                     android:textOn=""/>
 

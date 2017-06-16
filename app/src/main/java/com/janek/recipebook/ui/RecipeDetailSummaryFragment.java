@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -41,9 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 public class RecipeDetailSummaryFragment extends Fragment {
     @BindView(R.id.recipe_detail_cook_time) TextView cookTimeTextView;
@@ -95,7 +92,7 @@ public class RecipeDetailSummaryFragment extends Fragment {
         setVisibility(veganIcon, recipe.isVegan());
         setVisibility(vegetarianIcon, recipe.isVegetarian());
 
-        disposable.add(Observable.just(userSaved).subscribe(savedButton::setChecked));
+        disposable.add(Observable.just(userSaved).subscribe(RxCompoundButton.checked(savedButton)));
         disposable.add(RxView.clicks(websiteTextView).subscribe(event -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(recipe.getSourceUrl())))));
         disposable.add(RxCompoundButton.checkedChanges(savedButton).skipInitialValue().subscribe(this::saveRecipe));
 
