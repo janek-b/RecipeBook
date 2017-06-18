@@ -124,7 +124,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        disableCollapse();
+
+        if (fragmentManager.findFragmentById(R.id.content_frame) instanceof  RecipeDetailFragment) {
+            enableCollapse();
+        } else {
+            disableCollapse();
+        }
 
         // Listen for fragment changes and update selected nav item
         fragmentManager.addOnBackStackChangedListener(() -> {
@@ -161,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
             }
         };
-
     }
 
     @Override
