@@ -50,6 +50,8 @@ import com.squareup.picasso.Picasso;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -149,7 +151,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // update nav header
                 userProfileName.setText(currentUser.getDisplayName());
                 Picasso.with(MainActivity.this).load(currentUser.getPhotoUrl()).resize(100, 100).centerCrop().into(userProfileImg);
-                fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+                if (fragmentManager.findFragmentById(R.id.content_frame) == null) {
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+                }
             } else {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -157,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
             }
         };
+
     }
 
     @Override
