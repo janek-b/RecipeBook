@@ -45,15 +45,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         createAuthProgressDialog();
-//        mAuthListener = new FirebaseAuth.AuthStateListener() {
-//            @Override public void onAuthStateChanged(@android.support.annotation.NonNull FirebaseAuth firebaseAuth) {
-//                if (firebaseAuth.getCurrentUser() != null) {
-//                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//            }
-//        };
 
         mAuthListener = (firebaseAuth) -> {
             if (firebaseAuth.getCurrentUser() != null) {
@@ -76,23 +67,6 @@ public class LoginActivity extends AppCompatActivity {
             return validEmail && validPassword;
         }).subscribe(valid -> loginButton.setEnabled(valid)));
 
-//        disposable.add(Observable.combineLatest(emailObservable, passwordObservable, new BiFunction<CharSequence, CharSequence, Boolean>() {
-//            @Override public Boolean apply(@NonNull CharSequence emailInput, @NonNull CharSequence passwordInput) throws Exception {
-//
-//                boolean validEmail = (emailInput != null && Patterns.EMAIL_ADDRESS.matcher(emailInput).matches());
-//                if (!validEmail) emailEditText.setError("Please enter a valid email address");
-//
-//                boolean validPassword = passwordInput.length() > 6;
-//                if (!validPassword) passwordEditText.setError("Please enter a password containing at least 6 characters");
-//
-//                return validEmail && validPassword;
-//            }
-//        }).subscribe(new Consumer<Boolean>() {
-//            @Override public void accept(@NonNull Boolean valid) throws Exception {
-//                loginButton.setEnabled(valid);
-//            }
-//        }));
-
         disposable.add(RxView.clicks(loginButton).subscribe(event -> {
             String email = emailEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
@@ -105,22 +79,6 @@ public class LoginActivity extends AppCompatActivity {
             });
         }));
 
-//        disposable.add(RxView.clicks(loginButton).subscribe(new Consumer<Object>() {
-//            @Override public void accept(@NonNull Object o) throws Exception {
-//                String email = emailEditText.getText().toString().trim();
-//                String password = passwordEditText.getText().toString().trim();
-//                mAuthProgressDialog.show();
-//                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override public void onComplete(@android.support.annotation.NonNull Task<AuthResult> task) {
-//                        mAuthProgressDialog.dismiss();
-//                        if (!task.isSuccessful()) {
-//                            Toast.makeText(LoginActivity.this, "Something went wrong, Please try again.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//            }
-//        }));
-
         disposable.add(RxView.clicks(createAccountButton).subscribe(event -> {
             Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -128,14 +86,6 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }));
 
-//        disposable.add(RxView.clicks(createAccountButton).subscribe(new Consumer<Object>() {
-//            @Override public void accept(@NonNull Object o) throws Exception {
-//                Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(intent);
-//                finish();
-//            }
-//        }));
     }
 
     @Override
