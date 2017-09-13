@@ -6,7 +6,7 @@
 
 ## Description
 
-This project is an android application that allows users to discover and manage recipes. A user is able to search for new recipes and add them to their recipe book to easily find them again later. A user can also add their own recipes to their recipe book by entering them in through the app. A meal plan can be created for the week using the recipes a user has in their recipe book.
+This project is an android application that allows users to discover and manage recipes. A user is able to search for new recipes and add them to their recipe book to easily find them again later.
 
 ### Setup/Installation
 
